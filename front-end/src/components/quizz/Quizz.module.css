@@ -1,0 +1,153 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+    margin-top: var(--spacing-xl);
+
+}
+
+.question {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+.action {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    width: fit-content;
+}
+
+
+
+.button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.feedback {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.correct {
+    color: #2ecc71;
+}
+
+.incorrect {
+    color: #e74c3c;
+}
+
+.rules {
+    max-width: 600px;
+    text-align: center;
+    margin: auto;
+    font-family: var(--font-base);
+    color: var(--text-secondary);
+}
+
+.title {
+    font-size: var(--font-size-h1);
+    margin-bottom: var(--spacing-xl);
+    color: var(--solid-secondary);
+    font-family: var(--font-base);
+
+}
+
+.rulesList {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+
+}
+
+.rules p {
+    font-size: var(--font-size-h2);
+}
+
+.rulesList li {
+    margin-bottom: 10px;
+    font-size: var(--font-size-h2);
+}
+
+.startButton {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.startButton:hover {
+    background-color: #0056b3;
+}
+
+.modeSelector {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-around;
+    font-size: var(--font-size-p);
+    font-family: var(--font-base);
+}
+
+.modeSelector label {
+    font-weight: bold;
+    font-size: var(--font-size-p);
+}
+
+.modeSelector select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 8px;
+    background-color: var(--ic-primary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    /* Pour Safari/Chrome */
+    -moz-appearance: none;
+    color: var(--text-secondary);
+    filter: drop-shadow(0 0 1em rgba(59, 121, 246, 0.15));
+    transition: var(--transition-default);
+}
+
+.modeSelector select:focus {
+    outline: none;
+}
+
+
+.modeSelector select:hover {
+    background-color: var(--ic-tertiary);
+    color: var(--text-primary);
+}
+
+.buttonContainer {
+    margin-top: calc(var(--spacing-xl) * 2);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

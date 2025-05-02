@@ -1,0 +1,108 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 10vh;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--bg-primary);
+    /* Utilisation de la couleur d'arrière-plan */
+    color: var(--text-secondary);
+    font-size: var(--font-size-link);
+    font-family: var(--font-heading);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--solid-primary);
+    /* Logo color (couleur primaire) */
+}
+
+.nav {
+    display: flex;
+    flex-grow: 1;
+    /* Permet à la section de navigation de prendre tout l'espace disponible */
+    justify-content: center;
+    /* Centrer les liens de navigation */
+}
+
+.nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    width: 100%;
+    justify-content: center;
+    /* Centrer les liens dans la liste */
+}
+
+li {
+    list-style: none;
+
+}
+
+.nav a {
+    color: var(--text-secondary);
+    /* Couleur du texte pour les liens */
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.nav a svg {
+    color: var(--solid-secondary);
+}
+
+.nav a:hover {
+    text-decoration: underline;
+    color: var(--solid-primary);
+    /* Couleur au survol */
+}
+
+.loginRegister {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+    /* Assure que les éléments à droite ne créent pas un écart trop grand */
+}
+
+.avatarContainer {
+    position: relative;
+    cursor: pointer;
+}
+
+.avatar {
+    font-size: 24px;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+    /* Bordure primaire */
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.dropdown a {
+    padding: 0.5rem;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    color: inherit;
+}
+
+.dropdown a:hover {
+    background-color: #f0f0f0;
+    color: var(--bg-primary);
+}

@@ -1,0 +1,36 @@
+.home {
+    text-align: center;
+    padding: 2rem 0;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.home h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+.home p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.home .cta-button {
+    background-color: var(--ic-primary);
+    color: var(--solid-primary);
+    border: 2px solid var(--border-primary);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.home .cta-button:hover {
+    background-color: var(--ic-secondary);
+    color: var(--solid-secondary);
+}

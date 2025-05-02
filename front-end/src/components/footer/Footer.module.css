@@ -1,0 +1,30 @@
+.footer {
+    background-color: var(--bg-primary);
+    padding: 2rem 0;
+    color: var(--text-secondary);
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-link);
+
+}
+
+.footerLinks {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xl);
+    flex-direction: row;
+}
+
+.footerLinks li {
+    margin: 0.5rem 0;
+}
+
+.footerLinks a {
+    text-decoration: none;
+}
+
+.footerLinks a:hover {
+    color: var(--solid-secondary);
+}

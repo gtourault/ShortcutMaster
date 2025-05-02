@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Tektur:wght@400..900&display=swap');
+
+:root {
+    /* 🎨 Couleurs */
+    --color-primary: #1e90ff;
+    --color-secondary: #ffcc00;
+    --color-background: #f5f5f5;
+    --color-surface: #ffffff;
+    --color-text: #333;
+    --color-muted: #777;
+    --color-error: #e63946;
+    --color-success: #2ecc71;
+    --color-hover: #1565c0;
+
+    /* 🔠 Typographie */
+    --font-base: 'Outfit', sans-serif;
+    --font-heading: 'Tektur', sans-serif;
+
+    --font-size-h1: 2rem;
+    --font-size-h2: 1.5rem;
+    --font-size-p: 1rem;
+    --font-size-link: 1.2rem;
+    --font-size-small: 0.875rem;
+
+    --font-weight-regular: 400;
+    --font-weight-bold: 700;
+    --line-height-base: 1.5;
+
+    /* 📏 Espacement */
+    --spacing-xs: 0.4rem;
+    --spacing-sm: 0.7rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    /* 🧱 Général */
+    --border-radius: 0.5rem;
+    --shadow-default: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --transition-default: all 0.3s ease;
+
+    /* Background 
+    Le fond d'une page ou d'une section.
+    Les arrière-plans des cartes, boîtes de dialogue, boutons, etc.
+    Les zones de contenu, les modales, les menus, les formulaires, etc.
+    */
+    --bg-primary: #11131F;
+    --bg-secondary: #141726;
+
+
+    /* Interactive Components
+    Boutons
+    Liens (dans le menu ou ailleurs)
+    Cases à cocher (checkboxes)
+    Radio boutons
+    Switches (interrupteurs)
+    Menus déroulants, etc. */
+    --ic-primary: #182449;
+    --ic-secondary: #1D2E62;
+    --ic-tertiary: #253974;
+
+
+    /* Border and separators 
+    Bordures autour des cartes, formulaires, boutons, etc.
+    Séparateurs entre les sections, les lignes dans un tableau, etc.
+    Lignes fines pour délimiter visuellement les espaces.*/
+    --border-primary: #304384;
+    --border-secondary: #3A4F97;
+    --border-tertiary: #435DB1;
+
+
+    /* Solid colors 
+    Texte statique
+    Icônes
+    Arrière-plans simples sans effet d'interaction
+    Cartes ou autres sections de contenu statiques*/
+    --solid-primary: #3E63DD;
+    --solid-secondary: #5472E4;
+
+
+    /* Accessible text 
+    Texte principal
+    Légendes
+    Labels de formulaires
+    Texte dans les menus, boutons, etc.*/
+    --text-primary: #9EB1FF;
+    --text-secondary: #D6E1FF;
+
+    /*  */
+    /*  */
+    /*  */
+}

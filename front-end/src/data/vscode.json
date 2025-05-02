@@ -1,0 +1,22 @@
+{
+    "name": "vscode",
+    "label": "VSCode",
+    "shortcuts": [
+        {
+            "action": "Ouvrir un fichier",
+            "windows": "Ctrl + P",
+            "macos": "Cmd + P",
+            "linux": "Ctrl + P",
+            "description": "Permet d'ouvrir un fichier en tapant son nom.",
+            "category": "Navigation"
+        },
+        {
+            "action": "Formater le document",
+            "windows": "Shift + Alt + F",
+            "macos": "Shift + Option + F",
+            "linux": "Shift + Alt + F",
+            "description": "Formate le code dans le fichier actuel selon les règles définies.",
+            "category": "Édition"
+        }
+    ]
+}

@@ -1,0 +1,72 @@
+.trainingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: var(--bg-secondary);
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.instruction {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.inputDisplay {
+    min-height: 40px;
+    width: 200px;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.feedback {
+    font-size: 16px;
+    color: red;
+    margin-bottom: 10px;
+}
+
+.nextButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.nextButton:hover {
+    background-color: #0056b3;
+}
+
+.historySection {
+    margin-top: 2rem;
+    border-top: 1px solid #ccc;
+    padding-top: 1rem;
+}
+
+.historyList {
+    list-style: none;
+    padding: 0;
+}
+
+.historyList li {
+    margin-bottom: 0.5rem;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}

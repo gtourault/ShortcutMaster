@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-secondary);
+}
+
+.auth-container {
+  max-width: 400px;
+  margin: auto;
+  margin-top: 90px;
+  margin-bottom: 85px;
+  padding: 2rem;
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  filter: drop-shadow(0 0 1em rgba(59, 121, 246, 0.15));
+
+}
+
+.auth-title {
+  text-align: center;
+  color: var(--solid-primary);
+  margin-bottom: 1.5rem;
+  font-family: var(--font-base);
+  font-size: var(--font-size-h1);
+}
+
+.auth-error {
+  color: red;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-submit {
+  padding: var(--spacing-sm);
+  background-color: var(--solid-primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: var(--text-secondary);
+}
+
+.auth-submit:hover {
+  background-color: var(--solid-secondary);
+}
+
+.auth-switch {
+  margin-top: 1rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-family: var(--font-base);
+  color: var(--text-secondary);
+}
+
+.auth-toggle {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-weight: bold;
+}

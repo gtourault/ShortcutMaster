@@ -1,0 +1,47 @@
+@import '../../../styles/variables.css';
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+    width: 100%;
+}
+
+.inputGroup label {
+    font-weight: bold;
+    font-size: var(--font-size-p);
+    color: var(--solid-primary);
+    margin-bottom: 0.2rem;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-p);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--ic-primary);
+    color: var(--color-text);
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputGroup input:hover {
+    border-color: var(--color-primary);
+    background-color: var(--ic-secondary);
+}
+
+.inputGroup input:focus {
+    outline: none;
+    border-color: var(--border-secondary);
+    box-shadow: 0 0 0 3px var(--ic-tertiary);
+}
+
+.inputGroup input.error {
+    border-color: var(--border-tertiary);
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+.inputGroup ::placeholder {
+    color: var(--solid-secondary);
+}

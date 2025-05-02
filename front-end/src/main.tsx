@@ -1,0 +1,15 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+import { AuthProvider } from './context/authContext';
+
+
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <AuthProvider> {/* 👈 on entoure App avec le provider */}
+      <App />
+    </AuthProvider>
+  </StrictMode>,
+)
