@@ -1,6 +1,8 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import pool from './database.js';
+import { createSession, getUserSessions, getUserSummary } from './sessionsController.js';
+
 import {
     registerUser,
     loginUser,
@@ -28,6 +30,13 @@ router.get('/mon-compte', verifyToken, (req, res) => {
 router.post('/stats', verifyToken, updateUserStats);
 router.get('/mes-stats', verifyToken, getUserStats);
 
+/* route stats */
+
+router.post('/sessions', verifyToken, createSession);
+router.get("/stats/me/sessions", verifyToken, getUserSessions);
+
+router.get('/user/summary', verifyToken, getUserSummary);
+// router.get('/leaderboard', getLeaderboard);
 
 export default router;
 

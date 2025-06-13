@@ -17,6 +17,46 @@
             "linux": "Shift + Alt + F",
             "description": "Formate le code dans le fichier actuel selon les règles définies.",
             "category": "Édition"
+        },
+        {
+            "action": "Ouvrir la palette de commandes",
+            "windows": "Ctrl + Shift + P",
+            "macos": "Cmd + Shift + P",
+            "linux": "Ctrl + Shift + P",
+            "description": "Permet d'ouvrir la palette de commandes de VSCode pour accéder rapidement aux commandes.",
+            "category": "Navigation"
+        },
+        {
+            "action": "Nouveau fichier",
+            "windows": "Ctrl + N",
+            "macos": "Cmd + N",
+            "linux": "Ctrl + N",
+            "description": "Crée un nouveau fichier.",
+            "category": "Édition"
+        },
+        {
+            "action": "Fermer l'éditeur",
+            "windows": "Ctrl + W",
+            "macos": "Cmd + W",
+            "linux": "Ctrl + W",
+            "description": "Ferme l'éditeur actuel.",
+            "category": "Navigation"
+        },
+        {
+            "action": "Fermer la fenêtre",
+            "windows": "Ctrl + Shift + W",
+            "macos": "Cmd + Shift + W",
+            "linux": "Ctrl + Shift + W",
+            "description": "Ferme la fenêtre de VSCode.",
+            "category": "Navigation"
+        },
+        {
+            "action": "Accéder aux paramètres utilisateur",
+            "windows": "Ctrl + ,",
+            "macos": "Cmd + ,",
+            "linux": "Ctrl + ,",
+            "description": "Accède aux paramètres utilisateurs pour personnaliser l'éditeur.",
+            "category": "Paramètres"
         }
     ]
 }

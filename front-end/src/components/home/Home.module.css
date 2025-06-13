@@ -3,34 +3,202 @@
     padding: 2rem 0;
     background-color: var(--bg-secondary);
     color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .home h1 {
     font-size: 3rem;
     font-weight: bold;
     margin-bottom: 1rem;
-    color: var(--text-secondary);
+    background: -webkit-linear-gradient(135deg, var(--text-secondary) 0%, var(--solid-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.home p {
+.heroSection p {
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
     color: var(--text-secondary);
+    width: 60%;
+
 }
 
-.home .cta-button {
-    background-color: var(--ic-primary);
-    color: var(--solid-primary);
-    border: 2px solid var(--border-primary);
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 0.5rem;
-    transition: background-color 0.3s ease;
+.heroSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-.home .cta-button:hover {
-    background-color: var(--ic-secondary);
-    color: var(--solid-secondary);
+
+.statsSection {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.card {
+  flex: 1 1 250px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 12px;
+  padding: var(--spacing-xs) var(--spacing-xl);
+  text-align: center;
+  background-color: #fff0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.difficultySection {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.cardsWrapper {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+}
+
+.difficultyCard {
+  flex: 1 1 300px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: left;
+  background-color: #fff0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.difficultyCard:hover {
+  transform: translateY(-5px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.icon {
+  font-size: 1.5rem;
+}
+
+.cardDescription {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.featuresList {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.cardButton {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  background-color: var(--text-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cardButton:hover {
+  background-color: #7a91ff;
+}
+
+.softwareSection {
+  margin-top: 5rem;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.softwareCards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.softwareCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--text-secondary);
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  min-width: 280px;
+  max-width: 350px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background-color: #fff0;
+  transition: transform 0.2s ease;
+}
+
+.softwareCard:hover {
+  transform: translateY(-4px);
+}
+
+.softwareIcon {
+  font-size: 2rem;
+}
+
+.softwareInfo h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+  color: var(--text-primary);
+}
+
+.softwareInfo p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }

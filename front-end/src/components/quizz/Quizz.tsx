@@ -2,24 +2,97 @@ import React, { useState, useEffect } from 'react';
 import shortcutData from "../../data/vscode.json";
 import styles from "./Quizz.module.css";
 import Button from '../ui/button/Button';
+import { MdKeyboardHide } from "react-icons/md";
+import PieComp from '../ui/PieCharts/PieComp';
+import { FaArrowCircleDown, FaArrowCircleUp } from "react-icons/fa";
+import { IoIosTimer } from "react-icons/io";
+import { LuTarget } from "react-icons/lu";
+
+import vscodeLogo from "../../assets/vscode.svg";
 const quizzName = shortcutData.name;
+
+const logos: Record<string, string> = {
+  vscode: vscodeLogo,
+};
 const Quizz: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [options, setOptions] = useState<string[]>([]);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [hasStarted, setHasStarted] = useState(false);
     const [showIntro, setShowIntro] = useState<boolean | null>(null);
-    const [isLoadingPref, setIsLoadingPref] = useState(true); // 👈 pour gérer le chargement des préférences
+    const [isLoadingPref, setIsLoadingPref] = useState(true);
     const [correctCount, setCorrectCount] = useState(0);
     const [wrongCount, setWrongCount] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [startTime, setStartTime] = useState<number | null>(null);
-    const [mode, setMode] = useState<'learning' | 'challenge' | 'hardcore'>('learning');
+    const [mode, setMode] = useState<'Apprentissage' | 'Challenge' | 'Hardcore'>('Apprentissage');
+    const [detailsOpen, setDetailsOpen] = useState<Record<string, boolean>>({});
 
+    type FeedbackProps = {
+    isCorrect: boolean | null;
+    };
+    const Feedback = ({ isCorrect }: FeedbackProps) => {
+    if (isCorrect === null) return null;
 
+    return (
+        <div className={`${styles.feedback} ${isCorrect ? styles.correct : styles.incorrect}`}>
+        {isCorrect ? 'Bonne réponse !' : 'Mauvaise réponse.'}
+        </div>
+    );
+    };
     const token = localStorage.getItem("token");
+    const [history, setHistory] = useState<
+        {
+            action: string;
+            correctShortcut: string;
+            userInput: string;
+            success: boolean;
+            skipped?: boolean;
+            responseTime?: number;
+        }[]
+    >([]);
 
-    // Récupère la préférence de l'utilisateur pour les règles
+    const groupedHistory = history.reduce((acc, item) => {
+        if (!acc[item.action]) acc[item.action] = [];
+        acc[item.action].push(item);
+        return acc;
+    }, {} as Record<string, typeof history>);
+
+    const toggleDetails = (action: string) => {
+        setDetailsOpen(prev => ({
+            ...prev,
+            [action]: !prev[action],
+        }));
+    };
+
+        useEffect(() => {
+  if (history.length === 0) return;
+
+  // On part de la fin et on récupère les deux dernières actions uniques
+  const uniqueLastActions: string[] = [];
+  for (let i = history.length - 1; i >= 0 && uniqueLastActions.length < 2; i--) {
+    const action = history[i].action;
+    if (!uniqueLastActions.includes(action)) {
+      uniqueLastActions.push(action);
+    }
+  }
+
+  setDetailsOpen(() => {
+    const newState: Record<string, boolean> = {};
+    Object.keys(groupedHistory).forEach(action => {
+      newState[action] = uniqueLastActions.includes(action);
+    });
+    return newState;
+  });
+}, [history]);
+
+    const successCount = history.filter(item => item.success).length;
+    const failureCount = history.length - successCount;
+
+
+    
+
+
     useEffect(() => {
         const fetchPreference = async () => {
             if (!token) {
@@ -34,7 +107,7 @@ const Quizz: React.FC = () => {
                     },
                 });
                 const data = await res.json();
-                setShowIntro(data.showIntro); // 👈 récupère la préférence
+                setShowIntro(data.showIntro); 
                 setIsLoadingPref(false);
             } catch (err) {
                 console.error("Erreur de récupération des préférences", err);
@@ -58,12 +131,12 @@ const Quizz: React.FC = () => {
         const currentShortcut = shortcutData.shortcuts[currentIndex];
 
         if (!currentShortcut) {
-            return []; // 🔥 Si pas de question, retourne un tableau vide
+            return []; 
         }
         const correctAnswer = shortcutData.shortcuts[currentIndex].windows;
         const incorrectAnswers = shortcutData.shortcuts
             .filter((raccourci, index) => index !== currentIndex)
-            .slice(0, 2)
+            .slice(0, 4)
             .map((raccourci) => raccourci.windows);
 
         const allOptions = shuffleArray([correctAnswer, ...incorrectAnswers]);
@@ -72,68 +145,126 @@ const Quizz: React.FC = () => {
 
     useEffect(() => {
         generateOptions();
+        setStartTime(Date.now());
     }, [currentIndex]);
+const restartQuizz = async () => {
+    setHasStarted(false);
+    setCurrentIndex(0);
+    setCorrectCount(0);
+    setWrongCount(0);
+    setIsCorrect(null);
+    setIsFinished(false);
+    setHistory([]);
+    setStartTime(null);
 
+    if (token) {
+        try {
+            const res = await fetch("http://localhost:5000/api/auth/preferences/quizz-intro", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await res.json();
+            setShowIntro(data.showIntro);
+        } catch (err) {
+            console.error("Erreur de récupération de la préférence", err);
+            setShowIntro(false);
+        }
+    } else {
+        setShowIntro(true);
+    }
+};
     const handleAnswer = (selectedAnswer: string) => {
-        const correctAnswer = shortcutData.shortcuts[currentIndex].windows;
+        const currentShortcut = shortcutData.shortcuts[currentIndex];
+        const correctAnswer = currentShortcut.windows;
         const isAnswerCorrect = selectedAnswer === correctAnswer;
+        const responseTime = startTime ? Date.now() - startTime : 0;
 
         setIsCorrect(isAnswerCorrect);
 
-        // 👇 Toujours compter avant d'agir !
+
+        setHistory((prevHistory) => [
+            ...prevHistory,
+            {
+                action: currentShortcut.action,
+                correctShortcut: correctAnswer,
+                userInput: selectedAnswer,
+                success: isAnswerCorrect,
+                responseTime,
+            },
+        ]);
+
         if (isAnswerCorrect) {
             setCorrectCount(prev => prev + 1);
         } else {
             setWrongCount(prev => prev + 1);
         }
 
-        if (mode === 'learning') {
-            if (isAnswerCorrect) {
-                setCurrentIndex(prev => prev + 1);
-            }
-            // ❌ mauvaise réponse => on reste sur la même question (pas d'index +1)
-        }
-        else if (mode === 'challenge') {
-            // ✅ ou ❌ => on passe toujours à la suivante
+        if (mode === 'Apprentissage') {
+            if (isAnswerCorrect) setCurrentIndex(prev => prev + 1);
+        } else if (mode === 'Challenge') {
             setCurrentIndex(prev => prev + 1);
-        }
-        else if (mode === 'hardcore') {
+        } else if (mode === 'Hardcore') {
             if (isAnswerCorrect) {
                 setCurrentIndex(prev => prev + 1);
             } else {
-                // ❌ erreur => fin immédiate
                 setCurrentIndex(prev => prev + 1);
                 setIsFinished(true);
             }
         }
     };
-
-
     useEffect(() => {
         if (currentIndex === shortcutData.shortcuts.length) {
             finishQuizz();
         }
     }, [currentIndex]);
 
+
+function formatTime(ms: number): string {
+    if (ms < 1000) return `${ms} ms`;
+    
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    if (minutes > 0) {
+        return `${minutes} min ${remainingSeconds < 10 ? "0" : ""}${remainingSeconds} s`;
+    }
+
+    return `${seconds} s`;
+}
+
     const finishQuizz = async () => {
         setIsFinished(true);
         if (!token) return;
-
-        try {
             const totalQuestions = shortcutData.shortcuts.length;
+            const formattedAnswers = history.map(item => ({
+                    question_label: item.action,
+                    expected_shortcut: item.correctShortcut,
+                    user_input: item.userInput,
+                    is_correct: item.success,
+                    response_time_ms: item.responseTime ?? 0
+                }));
+            const payload = {
+                type: "quizz",
+                difficulty: mode,
+                software: quizzName,
+                system: "windows",
+                total_questions: totalQuestions,
+                total_correct: correctCount,
+                total_wrong: wrongCount,
+                average_time_ms: 4200,
+                answers: formattedAnswers
+            };
+        try {
 
-            const response = await fetch("http://localhost:5000/api/auth/stats", {
+            const response = await fetch("http://localhost:5000/api/auth/sessions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    total_questions: totalQuestions,
-                    correct_answers: correctCount,
-                    wrong_answers: wrongCount,
-                    quizz_name: quizzName,
-                }),
+                body: JSON.stringify(payload,),
             });
 
             if (!response.ok) {
@@ -149,7 +280,11 @@ const Quizz: React.FC = () => {
     };
 
 
-    // Enregistre la préférence pour ne plus afficher les règles
+
+
+
+
+
     const handleHideIntro = async () => {
         try {
             await fetch("http://localhost:5000/api/auth/preferences/quizz-intro", {
@@ -160,130 +295,191 @@ const Quizz: React.FC = () => {
                 },
                 body: JSON.stringify({ showQuizzIntro: false }),
             });
-            setShowIntro(false); // 👈 met à jour localement
+            setShowIntro(false);
         } catch (err) {
             console.error("Erreur lors de la mise à jour de la préférence", err);
         }
     };
 
-    // Si les préférences sont en train de se charger
     if (isLoadingPref) return <p>Chargement...</p>;
-
     return (
-        <div className={styles.container}>
-            {isFinished ? (
-
-                <div className={styles.endScreen}>
-                    <h1>Quizz terminé 🎉</h1>
-                    <p>Score : {correctCount} bonnes réponses sur {currentIndex} questions</p>
-                    <Button
-                        onClick={async () => {
-                            setHasStarted(false);
-                            setCurrentIndex(0);
-                            setCorrectCount(0);
-                            setWrongCount(0);
-                            setIsCorrect(null);
-                            setIsFinished(false);
-
-                            if (token) {
-                                try {
-                                    const res = await fetch("http://localhost:5000/api/auth/preferences/quizz-intro", {
-                                        headers: {
-                                            Authorization: `Bearer ${token}`,
-                                        },
-                                    });
-                                    const data = await res.json();
-                                    setShowIntro(data.showIntro); // 👈 on récupère VRAIMENT la préférence depuis la BDD
-                                } catch (err) {
-                                    console.error("Erreur de récupération de la préférence", err);
-                                    setShowIntro(false); // par sécurité on part du principe qu'on n'affiche pas les règles
-                                }
-                            } else {
-                                // Si pas connecté, on affiche toujours les règles
-                                setShowIntro(true);
-                            }
-                        }}
-                    >
-                        Rejouer
-                    </Button>
-
-                </div>
-            ) : (
-                <>
-                    {!hasStarted ? (
-                        <div className={styles.introContainer}>
-                            {/* Sélecteur de mode toujours affiché */}
-
-
-                            {/* Affichage des règles uniquement si showIntro est true */}
-                            {showIntro && (
-                                <div className={styles.rules}>
-                                    <h1 className={styles.title}>Bienvenue dans le Quizz des Raccourcis</h1>
-                                    <p>Voici comment ça fonctionne :</p>
-                                    <ul className={styles.rulesList}>
-                                        <li>🎮 Tu dois sélectionner un mode de jeu avant de commencer.</li>
-                                        <li>🧠 Une question s'affiche avec un raccourci à deviner.</li>
-                                        <li>💻 Tu dois choisir la bonne combinaison de touches (Windows).</li>
-                                        <li>✅ Si ta réponse est correcte, tu passes à la suivante.</li>
-                                        <li>❌ Sinon, tu peux réessayer !</li>
-                                    </ul>
-                                </div>
-                            )}
-                            <div className={styles.modeSelector}>
-                                <label htmlFor="mode-select">Choisissez un mode :</label>
-                                <select
-                                    id="mode-select"
-                                    value={mode}
-                                    onChange={(e) => setMode(e.target.value as 'learning' | 'challenge' | 'hardcore')}
-                                >
-                                    <option value="learning">Mode Apprentissage🎓</option>
-                                    <option value="challenge">Mode Challenge    ⚔️ </option>
-                                    <option value="hardcore">Mode Hardcore      💀</option>
-                                </select>
+        
+            <div className={styles.container}>
+                {isFinished ? (
+                    <div className={styles.endScreen}>  
+                        <h1 className={styles.quizzTitle}>Vos statistiques</h1>
+                        <p className={styles.infosTitle}>Suivez votre progrès et analysez votre performance</p>
+                        <div className={styles.scoreContainer}>
+                            <div className={styles.scoreCard}>
+                                <p>Score : {correctCount} bonnes réponses sur {currentIndex} questions</p>
+                                <LuTarget />
                             </div>
-                            <div className={styles.buttonContainer}><Button onClick={() => setHasStarted(true)}>Commencer</Button>
-                                {showIntro && <Button onClick={handleHideIntro}>Ne plus afficher les règles</Button>}</div>
+                            <div className={styles.scoreCard}>
+                                <p>Temps moyen de réponse : {history.length > 0 ? formatTime(Math.round(history.reduce((acc, cur) => acc + (cur.responseTime ?? 0), 0) / history.length)) : '0 s'}</p>
+                                <IoIosTimer />
+                            </div>
+                            <Button onClick={restartQuizz}>Rejouer</Button>
                         </div>
-                    ) : (
-                        <>
-                            <h1 className={styles.question}>Quizz des raccourcis</h1>
+                        <div className={styles.historyEndSection}>
+                            <div className={styles.history}>
+                            <h2>Historique :</h2>
+                                    <ul>
+                                        {Object.entries(groupedHistory).reverse().map(([action, attempts]) => (
+                                            <li key={action} className={styles.groupedItem}>
+                                                <div className={styles.groupHeader}>
+                                                    <strong>{action} - {attempts.length} tentative{attempts.length > 1 ? 's' : ''}</strong>
+                                                    <button
+                                                        className={styles.toggleDetailsBtn}
+                                                        onClick={() => toggleDetails(action)}
+                                                    >
+                                                        {detailsOpen[action] ? <FaArrowCircleUp /> : <FaArrowCircleDown />}
+                                                    </button>
+                                                </div>
+                                                {detailsOpen[action] && (
+                                                    <ul className={styles.detailList}>
+                                                        {attempts.map((item, index) => (
+                                                            <li key={index}
+                                                            className={item.success ? styles.correct : styles.incorrect}>
+                                                                Ta réponse : <strong>{item.userInput}</strong> - 
+                                                                {item.success ? "Bonne réponse" : "Mauvaise réponse"} - 
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                            </div>
+                        <PieComp successCount={successCount} failureCount={failureCount} />
 
-                            <p className={styles.progress}>
-                                Question {currentIndex + 1} / {shortcutData.shortcuts.length}
-                            </p>
-
-                            <div>
-                                {shortcutData.shortcuts[currentIndex] && (
-                                    <>
-                                        <h2 className={styles.action}>{shortcutData.shortcuts[currentIndex].action}</h2>
-                                        <div className={styles.buttons}>
-                                            {options.map((option, index) => (
-                                                <Button key={index} onClick={() => handleAnswer(option)}>
-                                                    {option}
-                                                </Button>
-                                            ))}
-                                        </div>
-                                    </>
-                                )}
-                                {isCorrect !== null && (
-                                    <div className={`${styles.feedback} ${isCorrect ? styles.correct : styles.incorrect}`}>
-                                        {isCorrect ? '✅ Bonne réponse !' : '❌ Mauvaise réponse.'}
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {!hasStarted ? (
+                            <div className={styles.introContainer}>
+                                {showIntro && (
+                                    <div className={styles.rules}>
+                                        <h1 className={styles.title}>Bienvenue dans le Quizz des Raccourcis</h1>
+                                        <p>Voici comment ça fonctionne :</p>
+                                        <ul className={styles.rulesList}>
+                                            <li>🎮 Tu dois sélectionner un mode de jeu avant de commencer.</li>
+                                            <li>🧠 Une question s'affiche avec un raccourci à deviner.</li>
+                                            <li>💻 Tu dois choisir la bonne combinaison de touches (Windows).</li>
+                                            <li>✅ Si ta réponse est correcte, tu passes à la suivante.</li>
+                                            <li>❌ Sinon, tu peux réessayer !</li>
+                                        </ul>
                                     </div>
                                 )}
-
-                                {/* Bouton "Terminer le quizz" */}
-                                {currentIndex < shortcutData.shortcuts.length && !isFinished && (
-                                    <Button onClick={finishQuizz}>Terminer le quizz</Button>
-                                )}
+                                <div className={styles.modeSelector}>
+                                    <label htmlFor="mode-select">Choisissez un mode :</label>
+                                    <select
+                                        id="mode-select"
+                                        value={mode}
+                                        onChange={(e) => setMode(e.target.value as 'Apprentissage' | 'Challenge' | 'Hardcore')}
+                                    >
+                                        <option value="Apprentissage">Mode Apprentissage🎓</option>
+                                        <option value="Challenge">Mode Challenge    ⚔️ </option>
+                                        <option value="Hardcore">Mode Hardcore      💀</option>
+                                    </select>
+                                </div>
+                                <div className={styles.buttonContainer}><Button onClick={() => setHasStarted(true)}>Commencer</Button>
+                                    {showIntro && <Button onClick={handleHideIntro}>Ne plus afficher les règles</Button>}</div>
                             </div>
-                        </>
-                    )}
-                </>
-            )}
-        </div>
+                        ) : (
+                            <>
+                            <div className={styles.quizzPage}>
+                                <div className={styles.empty}></div>
+                                <div className={styles.quizzHeader}>
+                                    <h1 className={styles.quizzTitle}>Quizz des raccourcis</h1>
+                                    <div className={styles.progressContainer}>
+                                    <p className={styles.progress}>
+                                        <img className={styles.progressSoftware} src={logos[shortcutData.name]} alt={shortcutData.label} />
+                                        <Feedback isCorrect={isCorrect} />
+                                        Question {currentIndex + 1} sur {shortcutData.shortcuts.length}
+                                    </p>
+                                    <div className={styles.progressBarBackground}>
+                                        <div
+                                        className={styles.progressBarFill}
+                                        style={{
+                                            width: `${((currentIndex + 1) / shortcutData.shortcuts.length) * 100}%`,
+                                        }}
+                                        ></div>
+                                    </div>
+                                    </div>
+                                <div className={styles.quizzContainer}>
+                                    {shortcutData.shortcuts[currentIndex] && (
+                                        <>
+                                            <div className={styles.questionContainer}>
+                                                <p><MdKeyboardHide />Raccourci clavier</p>
+                                                <h2 className={styles.action}>Quel raccourci permet de : {shortcutData.shortcuts[currentIndex].action}</h2>
+                                            <div className={styles.buttons}>
+                                                {options.map((option, index) => {
+                                                    const label = String.fromCharCode(65 + index); // A, B, C, D...
+                                                    return (
+                                                        <button className={styles.answerButtons} key={index} onClick={() => handleAnswer(option)}>
+                                                            <span className={styles.optionLabel}>{label}</span> {option}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                            </div>
+                                        </>
+                                    )}
+
+                                </div>
+                                </div>
+                                <div className={styles.historySection}>
+                                    <div className={styles.sessionInfosCard}>
+                                        <p className={styles.infosTitle}>Informations sur la session en cours : </p>
+                                        <p className={styles.infosMode}>Difficulté : <strong>{mode}</strong></p>
+                                        <p className={styles.infosTotal}>Total de raccourcis : <strong>{shortcutData.shortcuts.length}</strong></p>
+                                        <p className={styles.infosScore}>Score : <strong>{correctCount} bonnes</strong> / <strong>{wrongCount} mauvaises</strong></p>
+                                        <div className={styles.buttonsContainer}>
+                                            <Button onClick={finishQuizz}>Terminer</Button>
+                                            <Button onClick={restartQuizz}>Rejouer</Button>
+                                        </div>
+                                    </div>
+                                    <div className={styles.history}>
+                                    <h2>Historique :</h2>
+                                    <ul>
+                                        {Object.entries(groupedHistory).reverse().map(([action, attempts]) => (
+                                            <li key={action} className={styles.groupedItem}>
+                                                <div className={styles.groupHeader}>
+                                                    <strong>{action} - {attempts.length} tentative{attempts.length > 1 ? 's' : ''}</strong>
+                                                    <button
+                                                        className={styles.toggleDetailsBtn}
+                                                        onClick={() => toggleDetails(action)}
+                                                    >
+                                                        {detailsOpen[action] ? <FaArrowCircleUp /> : <FaArrowCircleDown />}
+                                                    </button>
+                                                </div>
+                                                {detailsOpen[action] && (
+                                                    <ul className={styles.detailList}>
+                                                        {attempts.map((item, index) => (
+                                                            <li key={index}
+                                                            className={item.success ? styles.correct : styles.incorrect}>
+                                                                Ta réponse : <strong>{item.userInput} - </strong> 
+                                                                {item.success ? "Bonne réponse" : "Mauvaise réponse"}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            </>
+                          
+                        )}
+                        
+                    </>
+                )}
+            </div>
+        
     );
-
-
 };
 
 export default Quizz;

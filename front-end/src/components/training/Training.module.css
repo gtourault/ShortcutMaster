@@ -1,72 +1,320 @@
+
+.rules {
+    max-width: 600px;
+    text-align: center;
+    margin: auto;
+    font-family: var(--font-base);
+    color: var(--text-secondary);
+}
+
+
+.rulesList {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+
+}
+
+.rules p {
+    font-size: var(--font-size-h2);
+}
+
+.rulesList li {
+    margin-bottom: 10px;
+    font-size: var(--font-size-h2);
+}
+
+
+.startButton {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.startButton:hover {
+    background-color: #0056b3;
+}
+
+.modeSelector {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-around;
+    font-size: var(--font-size-p);
+    font-family: var(--font-base);
+}
+
+.modeSelector label {
+    font-weight: bold;
+    font-size: var(--font-size-p);
+}
+
+.modeSelector select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 8px;
+    background-color: var(--ic-primary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    /* Pour Safari/Chrome */
+    -moz-appearance: none;
+    color: var(--text-secondary);
+    filter: drop-shadow(0 0 1em rgba(59, 121, 246, 0.15));
+    transition: var(--transition-default);
+}
+
+.modeSelector select:focus {
+    outline: none;
+}
+
+
+.modeSelector select:hover {
+    background-color: var(--ic-tertiary);
+    color: var(--text-primary);
+}
+
+.correct {
+    color: green;
+}
+.incorrect {
+    color: red;
+}
+
+
+
+.historySection {
+    flex: 1;
+    max-height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.historySection::-webkit-scrollbar {
+  display: none;
+}
+.history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history li {
+    width: 100%;
+    animation: fadeSlideIn 0.4s ease forwards;
+    padding: var(--spacing-sm);
+    border: solid 2px var(--ic-primary);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-xs);
+    transition: all 0.3s ease;
+}
+
+.history h2 {
+    font-size: var(--font-size-h2);
+    font-weight: bold;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+
+.history li ul li.incorrect {
+    background-color: var(--color-error);
+    color: var(--text-secondary);
+}
+.history li ul li.correct {
+    background-color: var(--color-success);
+    color: var(--text-secondary);
+}
+.groupHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-xs);
+    transition: all 0.3s ease;
+
+}
+.groupHeader button svg {
+    font-size: var(--font-size-h2);
+    color: var(--solid-secondary);
+    transition: all 0.3s ease;
+    margin-left: var(--spacing-xs);
+}
+
+.sessionInfos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: var(--spacing-lg);
+}
+
+.sessionInfosCard {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 5%;
+    font-family: var(--font-base);
+    color: var(--text-secondary);
+    border: solid 2px var(--ic-primary);
+    border-radius: var(--border-radius);
+    margin: var(--spacing-md);
+    padding: var(--spacing-lg);
+}
+.infosTitle {
+    font-size: var(--font-size-link);
+    font-weight: bold;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+.infosMode {
+    margin-bottom: var(--spacing-xs);
+    text-align: left;
+}
+.infosTotal {
+    text-align: left;
+    margin-bottom: var(--spacing-xs);
+}
+.infosScore {
+    text-align: left;
+    margin-bottom: var(--spacing-xs);
+}
+.buttonsContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: var(--spacing-lg);
+}
+
+.trainingPage {
+    width: 100%;
+    height: 90dvh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    gap: var(--spacing-xl);
+}
+
 .trainingContainer {
+    width: 100%;
+    flex: 1;
+
+}
+.empty {
+    flex: 0.7;
+}
+.historySection {
+    flex: 1;
+    max-height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+}
+.quizzTitle {
+    font-size: var(--font-size-h1);
+    font-weight: bold;
+    font-family: var(--font-base);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.inputDisplay {
+  min-height: 40px;               /* assez haut pour être visible */
+  padding: 8px 12px;             /* de l’air autour du texte */
+  border: 2px solid #3b82f6;    /* un bleu vif, bien visible */
+  border-radius: 6px;            /* coins arrondis */
+  background-color: #f0f9ff;    /* fond léger et doux */
+  font-family: 'Consolas', monospace; /* monospace, c’est plus "code" */
+  font-size: 1.2rem;             /* taille un peu plus grosse */
+  color: #1e40af;                /* bleu plus foncé */
+  user-select: none;             /* pas sélectionnable pour éviter effet bizarre */
+  display: inline-block;
+  min-width: 200px;              /* largeur mini */
+  text-align: center;            /* centrer le texte */
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); /* légère ombre */
+  transition: border-color 0.3s ease;
+}
+
+.inputDisplay:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+}
+
+
+
+
+
+
+.shortcutWarning {
+  background-color: var(--color-error);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: var(--text-tertiary);
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+.progressContainer {
+  width: 100%;
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border: 2px solid var(--ic-primary);
+  border-radius: var(--border-radius);
+}
+
+.progress {
+  margin-bottom: var(--spacing-sm);
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-xl);
+  align-items: center;
+  justify-content: space-between;
+}
+.progressSoftware {
+    width: 50px;
+    height: 50px;
+}
+.progressBarBackground {
+  width: 100%;
+  height: 10px;
+  background-color: var(--text-secondary);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: var(--solid-secondary); /* tu peux changer la couleur */
+  transition: width 0.3s ease-in-out;
+}
+
+.shortcutContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    background-color: var(--bg-secondary);
-}
-
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.instruction {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.inputDisplay {
-    min-height: 40px;
-    width: 200px;
-    border: 1px solid #ccc;
-    text-align: center;
-    line-height: 40px;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.feedback {
-    font-size: 16px;
-    color: red;
-    margin-bottom: 10px;
-}
-
-.nextButton {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.nextButton:hover {
-    background-color: #0056b3;
-}
-
-.historySection {
-    margin-top: 2rem;
-    border-top: 1px solid #ccc;
-    padding-top: 1rem;
-}
-
-.historyList {
-    list-style: none;
-    padding: 0;
-}
-
-.historyList li {
-    margin-bottom: 0.5rem;
-}
-
-.success {
-    color: green;
-}
-
-.error {
-    color: red;
+    width: 100%;
+    border: solid 2px var(--ic-primary);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
 }
