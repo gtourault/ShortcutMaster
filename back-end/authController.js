@@ -1,7 +1,7 @@
 import pool from './database.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import { verifyToken } from './authMiddleware.js';
 
 const SECRET_KEY = 'ton_secret_super_secret';
 
@@ -197,5 +197,23 @@ export async function getUserStats(req, res) {
         console.error('Erreur récupération stats:', error);
         res.status(500).json({ message: 'Erreur serveur' });
     }
+}
+
+export async function getHomeData(req, res) {
+  try {
+    // 1️⃣ Nombre total d'utilisateurs
+    const usersResult = await pool.query(`SELECT COUNT(*) AS users_count FROM users`);
+    const usersCount = parseInt(usersResult.rows[0].users_count);
+
+    // 2️⃣ Nombre total de sessions (tous utilisateurs confondus)
+    const sessionsResult = await pool.query(`SELECT COUNT(*) AS total_sessions FROM quizz_history`);
+    const totalSessions = parseInt(sessionsResult.rows[0].total_sessions) || 0;
+
+    // 3️⃣ Retour de la réponse
+    res.status(200).json({ usersCount, totalSessions });
+  } catch (err) {
+    console.error("Erreur serveur :", err);
+    res.status(500).json({ message: "Erreur serveur lors de la récupération des stats." });
+  }
 }
 

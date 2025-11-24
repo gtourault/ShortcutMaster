@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import pool from './database.js';
 import { createSession, getUserSessions, getUserSummary } from './sessionsController.js';
+import { getSoftwares } from './dataSoftwaresController.js';
 
 import {
     registerUser,
@@ -10,6 +11,7 @@ import {
     updateQuizzIntroPreference,
     updateUserStats,
     getUserStats,
+    getHomeData,
 } from './authController.js';
 import { verifyToken } from './authMiddleware.js';
 
@@ -37,7 +39,25 @@ router.get("/stats/me/sessions", verifyToken, getUserSessions);
 
 router.get('/user/summary', verifyToken, getUserSummary);
 // router.get('/leaderboard', getLeaderboard);
+router.get('/home', getHomeData );
+router.get('/softwares', getSoftwares );
+router.get('/softwares/:softwareId/shortcuts', async (req, res) => {
+  const { softwareId } = req.params;
 
+  try {
+    const shortcutsResult = await pool.query(
+      `SELECT action, windows, macos, linux, description, category
+       FROM shortcuts
+       WHERE software_id = $1`,
+      [softwareId]
+    );
+
+    res.status(200).json({ shortcuts: shortcutsResult.rows });
+  } catch (err) {
+    console.error("Erreur récupération raccourcis :", err);
+    res.status(500).json({ message: "Erreur serveur lors de la récupération des raccourcis.la" });
+  }
+});
 export default router;
 
 

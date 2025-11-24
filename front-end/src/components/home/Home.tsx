@@ -1,7 +1,55 @@
 import React from "react";
 import styles from './Home.module.css';
 import Button from "../ui/button/Button";
+import { useAuth } from '../../context/authContext';
+import axios from "axios";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Software } from "../../types/softwares";
+
+
+interface Home {
+    usersCount: number;
+    totalSessions: number;
+}
+
 const Home: React.FC = () => {
+    const [softwares, setSoftwares] = useState<Software[]>([]);
+    const { token, setToken } = useAuth();
+    const [ homeData , setHomeData] = useState<Home | null>(null);
+    const [expanded, setExpanded] = useState(false);
+    const displayedSoftwares = expanded ? softwares.slice(0, 10) : [];
+    const navigate = useNavigate();
+
+    useEffect(() => {
+    const fetchSoftwares = async () => {
+      try {
+        const res = await axios.get<Software[]>("http://localhost:5000/api/auth/softwares");
+        setSoftwares(res.data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des logiciels :", err);
+      }
+    };
+    fetchSoftwares();
+  }, []);
+
+
+      useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get<Home>("http://localhost:5000/api/auth/home", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+        });
+        setHomeData(res.data);
+          } catch (err) {
+        console.error("Erreur lors de la récupération des stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, [token]);
+
+
     return (
         <div className={styles.home}>
             <section className={styles.heroSection}>
@@ -15,21 +63,37 @@ const Home: React.FC = () => {
             </section>
             <section className={styles.statsSection}>
             <div className={styles.card}>
-                <div className={styles.icon}>🧩</div>
-                <div className={styles.value}>6 logiciels</div>
-                <p className={styles.description}>Et bientôt plus à venir !</p>
+                
+                <h2>Logiciels supportés</h2>
+        <p>{softwares.length} au total</p>
+        <a href="#softwares" className={styles.anchorBtn}>
+          Voir la liste
+        </a>
+                
             </div>
 
             <div className={styles.card}>
                 <div className={styles.icon}>👥</div>
-                <div className={styles.value}>12 inscrits</div>
+                
+                <div className={styles.value}> <p>{homeData ? homeData.usersCount : "Chargement..."}</p></div>
+                {!token && 
+                <div>
                 <p className={styles.description}>Rejoins la communauté dès maintenant</p>
+                <Button onClick={() => window.location.href = '/auth'}>S'inscrire</Button>
+                </div>
+                }
+                
             </div>
 
             <div className={styles.card}>
                 <div className={styles.icon}>📊</div>
-                <div className={styles.value}>38 sessions jouées</div>
-                <p className={styles.description}>Connecte-toi et commence pour voir tes stats !</p>
+                <div> 
+                    
+                    <p className={styles.description}>Déja <span>{homeData ? homeData.totalSessions : "Chargement..."}</span> sessions jouées, mesure toi aux autres et gravis le classement !</p>
+                </div>
+                
+                
+
             </div>
             </section>
             <section className={styles.difficultySection}>
@@ -47,7 +111,8 @@ const Home: React.FC = () => {
                     <li>Explication détaillée</li>
                     <li>Pas de pression</li>
                 </ul>
-                <button className={styles.cardButton}>Commencer</button>
+                <Button onClick={() => window.location.href = '/quizz'}>Commencer le quizz</Button>
+                <Button onClick={() => window.location.href = '/training'}>Commencer l'entrainement</Button>
                 </div>
 
                 {/* Mode Challenge */}
@@ -62,7 +127,8 @@ const Home: React.FC = () => {
                     <li>Score basé sur la rapidité</li>
                     <li>On passe au suivant même si erreur</li>
                 </ul>
-                <button className={styles.cardButton}>Commencer</button>
+                <Button onClick={() => window.location.href = '/quizz'}>Commencer le quizz</Button>
+                <Button onClick={() => window.location.href = '/training'}>Commencer l'entrainement</Button>
                 </div>
 
                 {/* Mode Hardcore */}
@@ -77,45 +143,27 @@ const Home: React.FC = () => {
                     <li>Pas d'indice</li>
                     <li>Mode brutal 😈</li>
                 </ul>
-                <button className={styles.cardButton}>Commencer</button>
+                <Button onClick={() => window.location.href = '/quizz'}>Commencer le quizz</Button>
+                <Button onClick={() => window.location.href = '/training'}>Commencer l'entrainement</Button>
                 </div>
             </div>
             </section>
-            <section className={styles.softwareSection}>
-            <h2 className={styles.sectionTitle}>Logiciels supportés</h2>
-            <p className={styles.sectionSubtitle}>
-                Apprenez les raccourcis des outils que vous utilisez au quotidien
-            </p>
-
-            <div className={styles.softwareCards}>
-                {/* VS Code */}
-                <div className={styles.softwareCard}>
-                <span className={styles.softwareIcon}>🖥️</span>
-                <div className={styles.softwareInfo}>
-                    <h3>Visual Studio Code</h3>
-                    <p>45 raccourcis disponibles</p>
-                </div>
-                </div>
-
-                {/* Placeholder Logiciel 2 */}
-                <div className={styles.softwareCard}>
-                <span className={styles.softwareIcon}>📦</span>
-                <div className={styles.softwareInfo}>
-                    <h3>Logiciel 2</h3>
-                    <p>Bientôt disponible</p>
-                </div>
-                </div>
-
-                {/* Placeholder Logiciel 3 */}
-                <div className={styles.softwareCard}>
-                <span className={styles.softwareIcon}>🎨</span>
-                <div className={styles.softwareInfo}>
-                    <h3>Logiciel 3</h3>
-                    <p>Bientôt disponible</p>
-                </div>
-                </div>
+            <section id="softwares" className={styles.softwaresSection}>
+        <h2>Liste des logiciels</h2>
+        <div className={styles.grid}>
+          {softwares.map((s) => (
+            <div
+              key={s.id}
+              className={styles.softwareCard}
+              onClick={() => navigate(`/encyclopedie/${s.id}`)} // plus tard -> navigation
+            >
+              <img src={s.logo} alt={s.label} className={styles.logo} />
+              <h3>{s.label}</h3>
+              <p>{s.shortcuts_count} raccourcis disponibles</p>
             </div>
-            </section>
+          ))}
+        </div>
+      </section>
 
         </div>
     );

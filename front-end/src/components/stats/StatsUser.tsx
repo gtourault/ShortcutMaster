@@ -1,28 +1,9 @@
 import { useEffect, useState } from 'react';
 import styles from './StatsUser.module.css';
+import LineComp from '../ui/LineCharts/LineComp';
+import { Session } from '../../types/sessions';
 
-interface Answer {
-    question_label: string;
-    expected_shortcut: string;
-    user_input: string;
-    is_correct: boolean;
-    response_time_ms: number;
-}
-
-interface Session {
-    id: number;
-    user_id: number;
-    played_at: string;
-    difficulty: string | null;
-    software: string | null;
-    system: string | null;
-    total_questions: number | null;
-    total_correct: number | null;
-    total_wrong: number | null;
-    average_time_ms: number | null;
-    type: string | null;
-    answers: Answer[];
-}
+/*
 const softwareIcons: Record<string, string> = {
     vscode: '/src/assets/vscode.svg',
 };
@@ -32,6 +13,7 @@ const systemIcons: Record<string, string> = {
     macos: '/assets/macos.png',
     linux: '/assets/linux.png',
 };
+*/
 const StatsUser = () => {
     const [sessions, setSessions] = useState<Session[]>([]);
     const [loading, setLoading] = useState(true);
@@ -66,6 +48,7 @@ const StatsUser = () => {
     if (!sessions.length) return <p>Aucune session trouvée.</p>;
 
     return (
+        
         <div className={styles.statsContainer}>
             <h2 className={styles.title}>Historique des sessions</h2>
             <div className={styles.sessionsList}>
@@ -99,20 +82,26 @@ const StatsUser = () => {
                                     </thead>
                                     <tbody>
                                         {session.answers.map((answer, i) => (
-                                            <tr key={i}>
-                                                <td>{answer.question_label}</td>
-                                                <td>{answer.expected_shortcut}</td>
-                                                <td>{answer.user_input}</td>
-                                                <td>{answer.is_correct ? '✅' : '❌'}</td>
-                                                <td>{answer.response_time_ms}</td>
+                                            <tr
+                                            key={i}
+                                            className={answer.is_correct ? styles.correctRow : styles.incorrectRow}
+                                            >
+                                            <td>{answer.question_label}</td>
+                                            <td>{answer.expected_shortcut}</td>
+                                            <td>{answer.user_input}</td>
+                                            <td>{answer.is_correct ? '✅' : '❌'}</td>
+                                            <td>{answer.response_time_ms}</td>
                                             </tr>
                                         ))}
-                                    </tbody>
+                                        </tbody>
                                 </table>
                             </div>
                         )}
                     </div>
                 ))}
+            </div>
+            <div className={styles.chartContainer}>
+            <LineComp sessions={sessions} />
             </div>
         </div>
     );

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import shortcutData from "../../data/vscode.json";
 import styles from "./Quizz.module.css";
 import Button from '../ui/button/Button';
 import { MdKeyboardHide } from "react-icons/md";
@@ -7,27 +6,27 @@ import PieComp from '../ui/PieCharts/PieComp';
 import { FaArrowCircleDown, FaArrowCircleUp } from "react-icons/fa";
 import { IoIosTimer } from "react-icons/io";
 import { LuTarget } from "react-icons/lu";
+import { motion, AnimatePresence } from "framer-motion";
+import QuizzSetup from './QuizzSetup';
 
-import vscodeLogo from "../../assets/vscode.svg";
-const quizzName = shortcutData.name;
-
-const logos: Record<string, string> = {
-  vscode: vscodeLogo,
-};
 const Quizz: React.FC = () => {
+
+    const [difficulty, setDifficulty] = useState<string>("");
+    const [softwareId, setSoftwareId] = useState<number>();
+    const [selectedSystem, setSelectedSystem] = useState<string>("");
+    const [selectedSoftware, setSelectedSoftware] = useState<{ id: number; label: string; logo: string; } | null>(null);
+    const [shortcuts, setShortcuts] = useState<any[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [options, setOptions] = useState<string[]>([]);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [hasStarted, setHasStarted] = useState(false);
-    const [showIntro, setShowIntro] = useState<boolean | null>(null);
-    const [isLoadingPref, setIsLoadingPref] = useState(true);
     const [correctCount, setCorrectCount] = useState(0);
     const [wrongCount, setWrongCount] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [startTime, setStartTime] = useState<number | null>(null);
-    const [mode, setMode] = useState<'Apprentissage' | 'Challenge' | 'Hardcore'>('Apprentissage');
+    //const [mode, setMode] = useState<'Apprentissage' | 'Challenge' | 'Hardcore'>('Apprentissage');
     const [detailsOpen, setDetailsOpen] = useState<Record<string, boolean>>({});
-
+    
     type FeedbackProps = {
     isCorrect: boolean | null;
     };
@@ -89,35 +88,6 @@ const Quizz: React.FC = () => {
     const successCount = history.filter(item => item.success).length;
     const failureCount = history.length - successCount;
 
-
-    
-
-
-    useEffect(() => {
-        const fetchPreference = async () => {
-            if (!token) {
-                setShowIntro(true);
-                setIsLoadingPref(false);
-                return;
-            }
-            try {
-                const res = await fetch("http://localhost:5000/api/auth/preferences/quizz-intro", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const data = await res.json();
-                setShowIntro(data.showIntro); 
-                setIsLoadingPref(false);
-            } catch (err) {
-                console.error("Erreur de récupération des préférences", err);
-                setIsLoadingPref(false);
-            }
-        };
-
-        fetchPreference();
-    }, [token]);
-
     const shuffleArray = (array: string[]) => {
         let shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -128,25 +98,34 @@ const Quizz: React.FC = () => {
     };
 
     const generateOptions = () => {
-        const currentShortcut = shortcutData.shortcuts[currentIndex];
+        const currentShortcut = shortcuts[currentIndex];
 
         if (!currentShortcut) {
             return []; 
         }
-        const correctAnswer = shortcutData.shortcuts[currentIndex].windows;
-        const incorrectAnswers = shortcutData.shortcuts
-            .filter((raccourci, index) => index !== currentIndex)
+        //changement a faire ? supprimé raccourci
+        //const correctAnswer = shortcuts[currentIndex].windows;
+        const correctAnswer = currentShortcut[selectedSystem as keyof typeof currentShortcut];
+        if (!correctAnswer) {
+            console.warn("Aucune donnée pour le système sélectionné :", selectedSystem);
+            return [];
+        }
+        const incorrectAnswers = shortcuts
+            .filter((_, index) => index !== currentIndex)
             .slice(0, 4)
-            .map((raccourci) => raccourci.windows);
+            .map((raccourci) => raccourci[selectedSystem as keyof typeof raccourci])
 
         const allOptions = shuffleArray([correctAnswer, ...incorrectAnswers]);
         setOptions(allOptions);
+        console.log(allOptions);
     };
 
     useEffect(() => {
-        generateOptions();
-        setStartTime(Date.now());
-    }, [currentIndex]);
+  if (shortcuts.length === 0) return;
+  generateOptions();
+  setStartTime(Date.now());
+}, [currentIndex, shortcuts]);
+
 const restartQuizz = async () => {
     setHasStarted(false);
     setCurrentIndex(0);
@@ -156,27 +135,11 @@ const restartQuizz = async () => {
     setIsFinished(false);
     setHistory([]);
     setStartTime(null);
-
-    if (token) {
-        try {
-            const res = await fetch("http://localhost:5000/api/auth/preferences/quizz-intro", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const data = await res.json();
-            setShowIntro(data.showIntro);
-        } catch (err) {
-            console.error("Erreur de récupération de la préférence", err);
-            setShowIntro(false);
-        }
-    } else {
-        setShowIntro(true);
-    }
 };
     const handleAnswer = (selectedAnswer: string) => {
-        const currentShortcut = shortcutData.shortcuts[currentIndex];
-        const correctAnswer = currentShortcut.windows;
+        const currentShortcut = shortcuts[currentIndex];
+        //const correctAnswer = currentShortcut.windows;
+        const correctAnswer = currentShortcut[selectedSystem as keyof typeof currentShortcut];
         const isAnswerCorrect = selectedAnswer === correctAnswer;
         const responseTime = startTime ? Date.now() - startTime : 0;
 
@@ -200,11 +163,11 @@ const restartQuizz = async () => {
             setWrongCount(prev => prev + 1);
         }
 
-        if (mode === 'Apprentissage') {
+        if (difficulty === 'Apprentissage') {
             if (isAnswerCorrect) setCurrentIndex(prev => prev + 1);
-        } else if (mode === 'Challenge') {
+        } else if (difficulty === 'Challenge') {
             setCurrentIndex(prev => prev + 1);
-        } else if (mode === 'Hardcore') {
+        } else if (difficulty === 'Hardcore') {
             if (isAnswerCorrect) {
                 setCurrentIndex(prev => prev + 1);
             } else {
@@ -214,10 +177,11 @@ const restartQuizz = async () => {
         }
     };
     useEffect(() => {
-        if (currentIndex === shortcutData.shortcuts.length) {
-            finishQuizz();
-        }
-    }, [currentIndex]);
+  if (!hasStarted || shortcuts.length === 0) return;
+  if (currentIndex >= shortcuts.length) {
+    finishQuizz();
+  }
+}, [currentIndex, shortcuts, hasStarted]);
 
 
 function formatTime(ms: number): string {
@@ -236,8 +200,10 @@ function formatTime(ms: number): string {
 
     const finishQuizz = async () => {
         setIsFinished(true);
+        console.log("Quizz terminé !");
         if (!token) return;
-            const totalQuestions = shortcutData.shortcuts.length;
+        console.log("Envoi des statistiques...");
+            const totalQuestions = shortcuts.length;
             const formattedAnswers = history.map(item => ({
                     question_label: item.action,
                     expected_shortcut: item.correctShortcut,
@@ -247,9 +213,9 @@ function formatTime(ms: number): string {
                 }));
             const payload = {
                 type: "quizz",
-                difficulty: mode,
-                software: quizzName,
-                system: "windows",
+                difficulty: difficulty,
+                software: selectedSoftware?.label,
+                system: selectedSystem,
                 total_questions: totalQuestions,
                 total_correct: correctCount,
                 total_wrong: wrongCount,
@@ -282,30 +248,46 @@ function formatTime(ms: number): string {
 
 
 
+const handleStart = async (data: { 
+  difficulty: string; 
+  software: { id: number; label: string; logo: string;  };
+  system: string;
+}) => {
+  setDifficulty(data.difficulty);
+  setSoftwareId(data.software.id);
+  setSelectedSystem(data.system);
+  const { id, label, logo, } = data.software;
+  
+  try {
+    const res = await fetch(`http://localhost:5000/api/auth/softwares/${id}/shortcuts`);
+    const fetchedShortcuts = await res.json();
+    setShortcuts(fetchedShortcuts.shortcuts);
+    console.log(fetchedShortcuts.shortcuts);
+    setHasStarted(true);
+    console.log('ici');
+    setSelectedSoftware({ id, label, logo, });
+  } catch (err) {
+    console.error("Erreur lors du chargement des raccourcis :", err);
+  }
+};
 
-
-
-    const handleHideIntro = async () => {
-        try {
-            await fetch("http://localhost:5000/api/auth/preferences/quizz-intro", {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ showQuizzIntro: false }),
-            });
-            setShowIntro(false);
-        } catch (err) {
-            console.error("Erreur lors de la mise à jour de la préférence", err);
-        }
-    };
-
-    if (isLoadingPref) return <p>Chargement...</p>;
+if (!hasStarted) {
+    //console.log('ici');
+    return <QuizzSetup onStart={handleStart} />;
+  }
     return (
         
             <div className={styles.container}>
+                <AnimatePresence mode="wait">
                 {isFinished ? (
+                    <motion.div
+                    key="endScreen"
+                    className={styles.endScreen}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    transition={{ duration: 0.5 }}
+                    >
                     <div className={styles.endScreen}>  
                         <h1 className={styles.quizzTitle}>Vos statistiques</h1>
                         <p className={styles.infosTitle}>Suivez votre progrès et analysez votre performance</p>
@@ -354,65 +336,50 @@ function formatTime(ms: number): string {
 
                         </div>
                     </div>
+                    </motion.div>
                 ) : (
                     <>
-                        {!hasStarted ? (
-                            <div className={styles.introContainer}>
-                                {showIntro && (
-                                    <div className={styles.rules}>
-                                        <h1 className={styles.title}>Bienvenue dans le Quizz des Raccourcis</h1>
-                                        <p>Voici comment ça fonctionne :</p>
-                                        <ul className={styles.rulesList}>
-                                            <li>🎮 Tu dois sélectionner un mode de jeu avant de commencer.</li>
-                                            <li>🧠 Une question s'affiche avec un raccourci à deviner.</li>
-                                            <li>💻 Tu dois choisir la bonne combinaison de touches (Windows).</li>
-                                            <li>✅ Si ta réponse est correcte, tu passes à la suivante.</li>
-                                            <li>❌ Sinon, tu peux réessayer !</li>
-                                        </ul>
-                                    </div>
-                                )}
-                                <div className={styles.modeSelector}>
-                                    <label htmlFor="mode-select">Choisissez un mode :</label>
-                                    <select
-                                        id="mode-select"
-                                        value={mode}
-                                        onChange={(e) => setMode(e.target.value as 'Apprentissage' | 'Challenge' | 'Hardcore')}
-                                    >
-                                        <option value="Apprentissage">Mode Apprentissage🎓</option>
-                                        <option value="Challenge">Mode Challenge    ⚔️ </option>
-                                        <option value="Hardcore">Mode Hardcore      💀</option>
-                                    </select>
-                                </div>
-                                <div className={styles.buttonContainer}><Button onClick={() => setHasStarted(true)}>Commencer</Button>
-                                    {showIntro && <Button onClick={handleHideIntro}>Ne plus afficher les règles</Button>}</div>
-                            </div>
-                        ) : (
-                            <>
+                    
+                        {!hasStarted ? null : (
+                            <motion.div
+                                key="quizzScreen"
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -50 }}
+                                transition={{ duration: 0.5 }}
+                                >
                             <div className={styles.quizzPage}>
                                 <div className={styles.empty}></div>
                                 <div className={styles.quizzHeader}>
                                     <h1 className={styles.quizzTitle}>Quizz des raccourcis</h1>
                                     <div className={styles.progressContainer}>
-                                    <p className={styles.progress}>
-                                        <img className={styles.progressSoftware} src={logos[shortcutData.name]} alt={shortcutData.label} />
+                                    <div className={styles.progress}>
+                                        {selectedSoftware && (
+                                            <img
+                                                className={styles.progressSoftware}
+                                                src={selectedSoftware.logo}
+                                                alt={selectedSoftware.label}
+                                            />
+                                            )}
                                         <Feedback isCorrect={isCorrect} />
-                                        Question {currentIndex + 1} sur {shortcutData.shortcuts.length}
-                                    </p>
+                                        Question {currentIndex + 1} sur {shortcuts.length}
+                                    </div>
+                                    <div>Systeme choisi : {selectedSystem}</div>
                                     <div className={styles.progressBarBackground}>
                                         <div
                                         className={styles.progressBarFill}
                                         style={{
-                                            width: `${((currentIndex + 1) / shortcutData.shortcuts.length) * 100}%`,
+                                            width: `${((currentIndex + 1) / shortcuts.length) * 100}%`,
                                         }}
                                         ></div>
                                     </div>
                                     </div>
                                 <div className={styles.quizzContainer}>
-                                    {shortcutData.shortcuts[currentIndex] && (
+                                    {shortcuts[currentIndex] && (
                                         <>
                                             <div className={styles.questionContainer}>
                                                 <p><MdKeyboardHide />Raccourci clavier</p>
-                                                <h2 className={styles.action}>Quel raccourci permet de : {shortcutData.shortcuts[currentIndex].action}</h2>
+                                                <h2 className={styles.action}>Quel raccourci permet de : {shortcuts[currentIndex].action}</h2>
                                             <div className={styles.buttons}>
                                                 {options.map((option, index) => {
                                                     const label = String.fromCharCode(65 + index); // A, B, C, D...
@@ -432,8 +399,8 @@ function formatTime(ms: number): string {
                                 <div className={styles.historySection}>
                                     <div className={styles.sessionInfosCard}>
                                         <p className={styles.infosTitle}>Informations sur la session en cours : </p>
-                                        <p className={styles.infosMode}>Difficulté : <strong>{mode}</strong></p>
-                                        <p className={styles.infosTotal}>Total de raccourcis : <strong>{shortcutData.shortcuts.length}</strong></p>
+                                        <p className={styles.infosMode}>Difficulté : <strong>{difficulty}</strong></p>
+                                        <p className={styles.infosTotal}>Total de raccourcis : <strong>{shortcuts.length}</strong></p>
                                         <p className={styles.infosScore}>Score : <strong>{correctCount} bonnes</strong> / <strong>{wrongCount} mauvaises</strong></p>
                                         <div className={styles.buttonsContainer}>
                                             <Button onClick={finishQuizz}>Terminer</Button>
@@ -454,29 +421,38 @@ function formatTime(ms: number): string {
                                                         {detailsOpen[action] ? <FaArrowCircleUp /> : <FaArrowCircleDown />}
                                                     </button>
                                                 </div>
-                                                {detailsOpen[action] && (
-                                                    <ul className={styles.detailList}>
-                                                        {attempts.map((item, index) => (
-                                                            <li key={index}
-                                                            className={item.success ? styles.correct : styles.incorrect}>
-                                                                Ta réponse : <strong>{item.userInput} - </strong> 
-                                                                {item.success ? "Bonne réponse" : "Mauvaise réponse"}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                )}
+                                                <AnimatePresence initial={false}>
+                                                    {detailsOpen[action] && (
+                                                        <motion.ul
+                                                            className={styles.detailList}
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: 'auto', opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        >
+                                                            {attempts.map((item, index) => (
+                                                                <li
+                                                                    key={index}
+                                                                    className={item.success ? styles.correct : styles.incorrect}
+                                                                >
+                                                                    Ta réponse : <strong>{item.userInput} - </strong>
+                                                                    {item.success ? "Bonne réponse" : "Mauvaise réponse"}
+                                                                </li>
+                                                            ))}
+                                                        </motion.ul>
+                                                    )}
+                                                </AnimatePresence>
                                             </li>
                                         ))}
                                     </ul>
                                     </div>
                                 </div>
                             </div>
-                            </>
-                          
+                            </motion.div>
                         )}
-                        
                     </>
                 )}
+                </AnimatePresence>
             </div>
         
     );

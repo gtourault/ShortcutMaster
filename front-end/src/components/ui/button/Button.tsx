@@ -5,6 +5,9 @@ interface ButtonProps {
     onClick?: () => void;
     type?: 'button' | 'submit' | 'reset';
     variant?: 'primary' | 'secondary';
+    className?: string;
+    style?: React.CSSProperties;
+    disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({ children, onClick, type = 'button', variant = 'primary' }) => {

@@ -1,0 +1,13 @@
+[
+  { "id": "vscode", "label": "Visual Studio Code", "logo": "/assets/vscode.svg", "shortcutsCount": 120, "dataFile": "vscode.json" },
+  { "id": "photoshop", "label": "Adobe Photoshop", "logo": "/assets/photoshop_logo.png", "shortcutsCount": 120, "dataFile": "photoshop.json" },
+  { "id": "illustrator", "label": "Adobe Illustrator", "logo": "/assets/illustrator_logo.png", "shortcutsCount": 120, "dataFile": "illustrator.json" },
+  { "id": "figma", "label": "Figma", "logo": "/assets/figma_logo.webp", "shortcutsCount": 120, "dataFile": "figma.json" },
+  { "id": "word", "label": "Microsoft Word", "logo": "/assets/word_logo.png", "shortcutsCount": 120, "dataFile": "word.json" },
+  { "id": "excel", "label": "Microsoft Excel", "logo": "/assets/excel_logo.png", "shortcutsCount": 120, "dataFile": "excel.json" },
+  { "id": "powerpoint", "label": "Microsoft PowerPoint", "logo": "/assets/powerpoint_logo.png", "shortcutsCount": 120, "dataFile": "powerpoint.json" },
+  { "id": "google-docs", "label": "Google Docs", "logo": "/assets/google_docs_logo.png", "shortcutsCount": 120, "dataFile": "google-docs.json" },
+  { "id": "google-sheets", "label": "Google Sheets", "logo": "/assets/google_sheets_logo.png", "shortcutsCount": 120, "dataFile": "google-sheets.json" },
+  { "id": "google-slides", "label": "Google Slides", "logo": "/assets/google_slides_logo.png", "shortcutsCount": 120, "dataFile": "google-slides.json" },
+  { "id": "notion", "label": "Notion", "logo": "/assets/notion_logo.png", "shortcutsCount": 120, "dataFile": "notion.json" }
+]

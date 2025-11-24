@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // 👈 Ajout
 import styles from './Login.module.css';
 import { useAuth } from '../../../context/authContext';
 
-
+//changement : as  any sur response data pour typage
 
 function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -24,12 +24,12 @@ function Login() {
             const response = await axios.post('http://localhost:5000/api/auth/login', formData);
 
             // 🔐 Mise à jour du contexte et localStorage
-            setToken(response.data.token); // ← ajoute cette ligne !
-            localStorage.setItem('user', JSON.stringify(response.data.user));
-            localStorage.setItem('token', response.data.token);
+            setToken((response.data as any).token);
+            localStorage.setItem('user', JSON.stringify((response.data as any).user));
+            localStorage.setItem('token', (response.data as any).token);
 
             alert('Connexion réussie !');
-            navigate('/mon-compte'); // ✅ Rediriger vers la page protégée
+            navigate('/mon-compte');
 
         } catch (err: any) {
             setError(err.response?.data?.message || 'Erreur de la connexion');

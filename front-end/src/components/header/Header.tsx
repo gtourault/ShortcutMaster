@@ -16,7 +16,8 @@ const Header: React.FC = () => {
     const navListRef = useRef<HTMLUListElement>(null);
     const logoRef = useRef<HTMLDivElement>(null);
     const avatarRef = useRef<HTMLDivElement>(null);
-
+    
+    
     const handleLogout = () => {
         localStorage.removeItem('token');
         setToken(null);

@@ -2,6 +2,7 @@
 
 import React from "react";
 import styles from './EncyclopedieData.module.css';
+//import softwares from "../../data/softwares.json";
 
 interface Raccourci {
     action: string;
@@ -13,12 +14,11 @@ interface Raccourci {
 }
 
 interface EncyclopedieDataProps {
-    name: string;
-    label: string;
+    softwareFilter?: string;
     shortcuts: Raccourci[];
 }
-
-const EncyclopedieData: React.FC<EncyclopedieDataProps> = ({ name, label, shortcuts }) => {
+// name, label,  changement : suppression de name et label care inutilisé
+const EncyclopedieData: React.FC<EncyclopedieDataProps> = ({ shortcuts, softwareFilter }) => {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Encyclopédie des Raccourcis</h1>

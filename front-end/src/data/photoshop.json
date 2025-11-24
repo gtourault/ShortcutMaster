@@ -1,0 +1,62 @@
+{
+    "name": "photoshop",
+    "label": "Photoshop",
+    "shortcuts": [
+        {
+            "action": "Ouvrir un fichier",
+            "windows": "Ctrl + P",
+            "macos": "Cmd + P",
+            "linux": "Ctrl + P",
+            "description": "Permet d'ouvrir un fichier en tapant son nom.Photoshop",
+            "category": "Navigation "
+        },
+        {
+            "action": "Formater le document",
+            "windows": "Shift + Alt + F",
+            "macos": "Shift + Option + F",
+            "linux": "Shift + Alt + F",
+            "description": "Formate le code dans le fichier actuel selon les règles définies.Photoshop",
+            "category": "Édition"
+        },
+        {
+            "action": "Ouvrir la palette de commandes",
+            "windows": "Ctrl + Shift + P",
+            "macos": "Cmd + Shift + P",
+            "linux": "Ctrl + Shift + P",
+            "description": "Permet d'ouvrir la palette de commandes de VSCode pour accéder rapidement aux commandes.Photoshop",
+            "category": "Navigation"
+        },
+        {
+            "action": "Nouveau fichier",
+            "windows": "Ctrl + N",
+            "macos": "Cmd + N",
+            "linux": "Ctrl + N",
+            "description": "Crée un nouveau fichier.Photoshop",
+            "category": "Édition"
+        },
+        {
+            "action": "Fermer l'éditeur",
+            "windows": "Ctrl + W",
+            "macos": "Cmd + W",
+            "linux": "Ctrl + W",
+            "description": "Ferme l'éditeur actuel.Photoshop",
+            "category": "Navigation"
+        },
+        {
+            "action": "Fermer la fenêtre",
+            "windows": "Ctrl + Shift + W",
+            "macos": "Cmd + Shift + W",
+            "linux": "Ctrl + Shift + W",
+            "description": "Ferme la fenêtre de VSCodePhotoshop.",
+            "category": "Navigation"
+        },
+        {
+            "action": "Accéder aux paramètres utilisateur",
+            "windows": "Ctrl + ,",
+            "macos": "Cmd + ,",
+            "linux": "Ctrl + ,",
+            "description": "Accède aux paramètres utilisateurs pour personnaliser l'éditeur.Photoshop",
+            "category": "Paramètres"
+        }
+    ]
+}

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import InputField from '../components/ui/InputFields/InputFields';
 import Button from '../components/ui/button/Button';
-import { FaUser, FaLock } from 'react-icons/fa';
+//import { FaUser, FaLock } from 'react-icons/fa';
 
 
 
@@ -36,9 +36,9 @@ const Auth = () => {
             const response = await axios.post(url, formData);
 
             if (isLogin) {
-                localStorage.setItem('user', JSON.stringify(response.data.user));
-                localStorage.setItem('token', response.data.token);
-                setToken(response.data.token);
+                localStorage.setItem('user', JSON.stringify((response.data as any).user));
+                localStorage.setItem('token', (response.data as any).token);
+                setToken((response.data as any).token);
                 navigate('/mon-compte');
             } else {
                 alert('Compte créé ! Vous pouvez maintenant vous connecter.');

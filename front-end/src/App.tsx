@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
 import QuizzPage from "./pages/QuizzPage";
 import Encyclopedie from "./pages/EncyclopediePage";
@@ -13,7 +13,7 @@ import MyAccount from "./pages/MyAccount.tsx";
 import Auth from "./pages/Auth";
 import Footer from './components/footer/Footer';
 import Stats from "./pages/Stats";
-
+//changement : suppression de l'imporpt LINK car inutilisé
 function App() {
   return (
     <Router>
@@ -21,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/encyclopedie" element={<Encyclopedie />} />
+        <Route path="/encyclopedie/:softwareId" element={<Encyclopedie />} />
         <Route path="/quizz" element={<QuizzPage />} />
         <Route path="/training" element={<Training />} />
         <Route path="/test" element={<Test />} />
