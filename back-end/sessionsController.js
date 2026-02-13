@@ -124,6 +124,9 @@ export const getUserSummary = async (req, res) => {
             WITH user_sessions AS (
                 SELECT * FROM sessions WHERE user_id = $1
             ),
+            user_info AS (
+            SELECT id, username FROM users WHERE id = $1
+            ),
             summary AS (
                 SELECT 
                     COUNT(*) AS total_sessions,
@@ -163,6 +166,7 @@ export const getUserSummary = async (req, res) => {
                 SELECT difficulty, COUNT(*) AS count FROM user_sessions GROUP BY difficulty
             )
             SELECT 
+                ui.username, 
                 s.*,
                 b.id AS best_score_id,
                 b.total_correct AS best_score_correct,
@@ -173,12 +177,13 @@ export const getUserSummary = async (req, res) => {
                 json_object_agg(sy.system, sy.count) AS distribution_by_system,
                 json_object_agg(d.difficulty, d.count) AS distribution_by_difficulty
             FROM summary s
+            CROSS JOIN user_info ui
             LEFT JOIN best_score b ON TRUE
             LEFT JOIN by_type bt ON TRUE
             LEFT JOIN by_software bs ON TRUE
             LEFT JOIN by_system sy ON TRUE
             LEFT JOIN by_difficulty d ON TRUE
-            GROUP BY s.total_sessions, s.total_correct, s.total_wrong, s.average_score, s.average_time_ms, s.last_played_at,
+            GROUP BY ui.username, s.total_sessions, s.total_correct, s.total_wrong, s.average_score, s.average_time_ms, s.last_played_at,
                      b.id, b.total_correct, b.total_questions, b.played_at;
             `,
             [userId]
