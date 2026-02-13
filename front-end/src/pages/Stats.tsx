@@ -4,7 +4,7 @@ import UserSummary from '../components/stats/UserSummary';
 
 const Stats = () => {
     return (
-        <div>
+        <div className='stats-page'>
             <h1>📈 Mes Statistiques</h1>
             <UserSummary/>
             <StatsUser />

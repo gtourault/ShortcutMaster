@@ -33,8 +33,8 @@ import { useState } from 'react';
 import { useEffect, useRef } from 'react'
 import { Terminal } from 'xterm'
 import 'xterm/css/xterm.css'
-
-
+import styles from './test.module.css'
+import UserAvatarSvg from '../components/ui/userAvatar/UserAvatarSvg';
 
 export default function Test() {
     const terminalRef = useRef<HTMLDivElement | null>(null);
@@ -69,43 +69,16 @@ export default function Test() {
     }, [isTerminalVisible]);
 
     return (
-        <div className="p-4 space-y-4">
-            <div className="space-x-4">
-                <button
-                    onClick={() => setIsEditorVisible(!isEditorVisible)}
-                    className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                >
-                    VSCode
-                </button>
-                <button
-                    onClick={() => setIsTerminalVisible(!isTerminalVisible)}
-                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
-                >
-                    Terminal
-                </button>
-            </div>
+        <div className={styles.pageTest}>
+<div className={styles.crowd}>
+{Array.from({ length: 9 }).map((_, index) => (
+  <div key={index} className={styles.avatar}>
+    <UserAvatarSvg />
+  </div>
+))}
+</div>
 
-            {isEditorVisible && (
-                <Editor
-                    height="300px"
-                    width="100%"
-                    defaultLanguage="javascript"
-                    defaultValue="// write some code here"
-                />
-            )}
 
-            {isTerminalVisible && (
-                <div
-                    ref={terminalRef}
-                    style={{
-                        height: "300px",
-                        width: "100%",
-                        backgroundColor: "#1e1e1e",
-                        padding: "1rem",
-                        borderRadius: "0.5rem",
-                    }}
-                />
-            )}
         </div>
     );
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './StatsUser.module.css';
 
 interface SummaryData {
+  username: string;
   total_sessions: number;
   total_correct: number;
   total_wrong: number;
@@ -33,6 +34,7 @@ const UserSummary = () => {
         });
         const data = await response.json();
         setSummary(data);
+        console.log('API summary raw:', data);
       } catch (error) {
         console.error('Erreur récupération résumé :', error);
       } finally {
@@ -42,12 +44,15 @@ const UserSummary = () => {
 
     fetchSummary();
   }, []);
-
+  console.log('User summary data:', summary?.username);
   if (loading) return <p>Chargement du résumé...</p>;
   if (!summary) return <p>Aucune donnée de résumé disponible.</p>;
 
   return (
     <div className={styles.summaryContainer}>
+      <h1>
+      Hello {summary?.username} 👋
+    </h1>
       <h2 className={styles.sectionTitle}>Résumé global</h2>
       <div className={styles.cardsGrid}>
         <div className={styles.statCard}>

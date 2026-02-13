@@ -6,37 +6,39 @@ import { FaArrowCircleDown, FaArrowCircleUp } from "react-icons/fa";
 import { IoIosTimer } from "react-icons/io";
 import { LuTarget } from "react-icons/lu";
 import QuizzSetup from "../quizz/QuizzSetup";
+import { Shortcut } from "../../libs/types.tsx";
+import { useKeyboard } from "../../hooks/useKeyboard.tsx"; 
+import { shuffleArray, formatTime, normalizeKey, isDangerousShortcut } from "../../libs/utils.tsx";
+import { useSessionHistory } from "../../hooks/useSessionHistory.tsx";
+import HistoryList from "../ui/HistoryList/HistoryList.tsx";
+//import type { HistoryItem } from "../../libs/types.tsx";
+import { useLocation } from 'react-router-dom';
 
 type GameMode = "Apprentissage" | "Challenge" | "Hardcore";
-
+/*
 const shuffleArray = <T,>(array: T[]): T[] => {
     return [...array].sort(() => Math.random() - 0.5);
 };
+*/
 
-interface Shortcut {
-    id: number;
-    action: string;
-    windows: string;
-    macos: string;
-    linux: string;
-    software_id: number;
-}
 
 const Training: React.FC = () => {
     const [mode, setMode] = useState<GameMode>("Apprentissage");
-    const [pressedKeys, setPressedKeys] = useState<string[]>([]);
+    //const [pressedKeys, setPressedKeys] = useState<string[]>([]);
+    //const { pressedKeys, reset: resetInput, removeKey } = useKeyboard({ enabled: true, preventDefault: false });
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [startTime, setStartTime] = useState<number | null>(null);
-    const [showIntro, setShowIntro] = useState<boolean | null>(null);
+    //const [showIntro, setShowIntro] = useState<boolean | null>(null);
     const token = localStorage.getItem("token");
-    const [isLoadingPref, setIsLoadingPref] = useState(true);
+    //const [isLoadingPref, setIsLoadingPref] = useState(true);
     const [hasStarted, setHasStarted] = useState(false);
     const [gameOver, setGameOver] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [correctCount, setCorrectCount] = useState(0);
     const [wrongCount, setWrongCount] = useState(0);
     const [showWarning, setShowWarning] = useState(false);
-    const [detailsOpen, setDetailsOpen] = useState<Record<string, boolean>>({});
+    //const [detailsOpen, setDetailsOpen] = useState<Record<string, boolean>>({});
+    const { pressedKeys, reset: resetInput, removeKey } = useKeyboard({ enabled: hasStarted && !gameOver, preventDefault: false });
 
     // 🔹 États de configuration (reçus du QuizzSetup)
     const [difficulty, setDifficulty] = useState<string>("");
@@ -52,8 +54,11 @@ const Training: React.FC = () => {
     const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
     const [shuffledShortcuts, setShuffledShortcuts] = useState<Shortcut[]>([]);
     const [currentShortcut, setCurrentShortcut] = useState<Shortcut | null>(null);
-
+const location = useLocation();
+    const preselectedSoftwareId =
+    location.state?.preselectedSoftwareId;
     // 🔹 Historique
+    /*
     const [history, setHistory] = useState<
         {
             action: string;
@@ -64,7 +69,9 @@ const Training: React.FC = () => {
             responseTime?: number;
         }[]
     >([]);
-
+*/
+const { history, push: pushHistory, clear: clearHistory, grouped, successCount, toggleDetails, detailsOpen } = useSessionHistory([]);
+/*
     // 🔹 Regroupement de l'historique par action
     const groupedHistory = history
         .filter((item): item is NonNullable<typeof item> => Boolean(item))
@@ -76,17 +83,11 @@ const Training: React.FC = () => {
         }, {} as Record<string, typeof history>);
 
     // 🔹 Compteurs de succès/échec
-    const successCount = history.filter(item => item.success).length;
+    //const successCount = history.filter(item => item.success).length;
+    */
     const failureCount = history.length - successCount;
 
-    // 🔹 Toggle des détails dans l'historique
-    const toggleDetails = (action: string) => {
-        setDetailsOpen(prev => ({
-            ...prev,
-            [action]: !prev[action]
-        }));
-    };
-
+/*
     // ========================================
     // 🔹 EFFET : Auto-ouverture des 2 dernières actions
     // ========================================
@@ -103,7 +104,7 @@ const Training: React.FC = () => {
 
         setDetailsOpen(() => {
             const newState: Record<string, boolean> = {};
-            Object.keys(groupedHistory).forEach(action => {
+            Object.keys(grouped).forEach(action => {
                 newState[action] = uniqueLastActions.includes(action);
             });
             return newState;
@@ -186,7 +187,7 @@ const Training: React.FC = () => {
             dangerCombo.every(key => set.has(key))
         );
     };
-
+*/
     // ========================================
     // 🔹 PASSAGE AU RACCOURCI SUIVANT
     // ========================================
@@ -195,7 +196,8 @@ const Training: React.FC = () => {
         if (nextIndex < shuffledShortcuts.length) {
             setCurrentIndex(nextIndex);
             setCurrentShortcut(shuffledShortcuts[nextIndex]);
-            setPressedKeys([]);
+            //setPressedKeys([]);
+            resetInput();
             setStartTime(Date.now());
         } else {
             console.log("Fin de l'entraînement");
@@ -203,21 +205,11 @@ const Training: React.FC = () => {
         }
     };
 
-    // ========================================
-    // 🔹 RÉINITIALISATION DE L'INPUT
-    // ========================================
-    const resetInput = () => {
-        setPressedKeys([]);
-        setStartTime(Date.now());
-    };
 
     // ========================================
     // 🔹 PASSER UN RACCOURCI
-    // ========================================
-    const skipShortcut = () => {
-        if (!currentShortcut) return;
-
-        setHistory((prev) => [
+    /*
+setHistory((prev) => [
             ...prev,
             {
                 action: currentShortcut.action,
@@ -227,6 +219,20 @@ const Training: React.FC = () => {
                 skipped: true,
             },
         ]);
+    */
+    
+    // ========================================
+    const skipShortcut = () => {
+        if (!currentShortcut) return;
+
+        pushHistory({
+            action: currentShortcut.action,
+            correctShortcut: getCorrectShortcutForSystem(currentShortcut),
+            userInput: "-",
+            success: false,
+            skipped: true,
+            });
+
         nextShortcut();
         setWrongCount(prev => prev + 1);
     };
@@ -246,7 +252,7 @@ const Training: React.FC = () => {
                 return shortcut.windows;
         }
     };
-
+/*
     // ========================================
     // 🔹 GESTION DES TOUCHES PRESSÉES
     // ========================================
@@ -259,7 +265,21 @@ const Training: React.FC = () => {
             setPressedKeys((prev) => [...prev, key]);
         }
     };
-
+    // ========================================
+    // 🔹 EFFET : ÉCOUTE DU CLAVIER
+    // ========================================
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [pressedKeys, gameOver]);
+    // ========================================
+    // 🔹 RÉINITIALISATION DE L'INPUT
+    // ========================================
+    const resetInput = () => {
+        setPressedKeys([]);
+        setStartTime(Date.now());
+    };
+*/
     // ========================================
     // 🔹 REDÉMARRAGE DE L'ENTRAÎNEMENT
     // ========================================
@@ -270,9 +290,11 @@ const Training: React.FC = () => {
         setCorrectCount(0);
         setWrongCount(0);
         setCurrentShortcut(newShuffled[0]);
-        setPressedKeys([]);
+        //setPressedKeys([]);
+        resetInput();
         setStartTime(Date.now());
-        setHistory([]);
+        //setHistory([]);
+        clearHistory();
         setGameOver(false);
         setHasStarted(false);
     };
@@ -291,25 +313,21 @@ const Training: React.FC = () => {
             .map(normalizeKey)
             .sort();
 
-        const userKeys = [...pressedKeys].map(normalizeKey).sort();
+        const userKeys = pressedKeys.map(normalizeKey).sort();
 
         const isCorrect = JSON.stringify(userKeys) === JSON.stringify(expectedKeys);
         const responseTime = startTime ? Date.now() - startTime : undefined;
 
         if (userKeys.length >= expectedKeys.length) {
             // 🔸 Ajout à l'historique (DÉCOMMENTÉ ET CORRIGÉ)
-            setHistory((prev) => [
-                ...prev,
-                {
-                    action: currentShortcut.action,
-                    correctShortcut: correctShortcut,
-                    userInput: userKeys.join(" + "),
-                    success: isCorrect,
-                    responseTime: (mode !== "Apprentissage" && responseTime) ? responseTime : undefined,
-                },
-            ]);
+            pushHistory({
+                action: currentShortcut.action,
+                correctShortcut: correctShortcut,
+                userInput: userKeys.join(" + "),
+                success: isCorrect,
+                responseTime: (mode !== "Apprentissage" && responseTime) ? responseTime : undefined,
+                });
 
-            // 🔸 Logique selon le mode
             if (mode === "Apprentissage") {
                 if (isCorrect) {
                     setIsCorrect(true);
@@ -322,7 +340,8 @@ const Training: React.FC = () => {
                     setIsCorrect(false);
                     setWrongCount(prev => prev + 1);
                     setTimeout(() => {
-                        setPressedKeys([]);
+                        //setPressedKeys([]);
+                        resetInput();
                         setIsCorrect(null);
                     }, 1000);
                 }
@@ -361,6 +380,7 @@ const Training: React.FC = () => {
     // ========================================
     // 🔹 EFFET : CHARGEMENT DES PRÉFÉRENCES
     // ========================================
+    /*
     useEffect(() => {
         const fetchPreference = async () => {
             if (!token) {
@@ -385,18 +405,12 @@ const Training: React.FC = () => {
 
         fetchPreference();
     }, [token]);
-
-    // ========================================
-    // 🔹 EFFET : ÉCOUTE DU CLAVIER
-    // ========================================
-    useEffect(() => {
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [pressedKeys, gameOver]);
+*/
 
     // ========================================
     // 🔹 MASQUER L'INTRO
     // ========================================
+    /*
     const handleHideIntro = async () => {
         try {
             await fetch("http://localhost:5000/api/auth/preferences/quizz-intro", {
@@ -412,7 +426,7 @@ const Training: React.FC = () => {
             console.error("Erreur lors de la mise à jour de la préférence", err);
         }
     };
-
+*/
     // ========================================
     // 🔹 EFFET : DÉTECTION DES RACCOURCIS DANGEREUX
     // ========================================
@@ -503,17 +517,17 @@ const Training: React.FC = () => {
         try {
             // 🔸 Récupère les raccourcis depuis l'API
             const res = await fetch(`http://localhost:5000/api/auth/softwares/${data.software.id}/shortcuts`);
-            const fetchedData = await res.json();
-            const fetchedShortcuts = fetchedData.shortcuts;
-
-            setShortcuts(fetchedShortcuts);
-
-            // 🔸 Mélange et initialise CORRECTEMENT
-            const shuffled = shuffleArray(fetchedShortcuts);
+            const fetched = await res.json();
+            const all = fetched.shortcuts;
+            setShortcuts(all);
+            const shuffled = shuffleArray(all);
             setShuffledShortcuts(shuffled);
-            setCurrentShortcut(shuffled[0]); // ✅ CORRECTION ICI
+            setCurrentShortcut(shuffled[0]);
+            setStartTime(Date.now());
+            setHasStarted(true);
             
-            setPressedKeys([]);
+            //setPressedKeys([]);
+            resetInput();
             setStartTime(Date.now());
             setHasStarted(true);
 
@@ -521,21 +535,31 @@ const Training: React.FC = () => {
                 difficulty: data.difficulty,
                 software: data.software.label,
                 system: data.system,
-                totalShortcuts: fetchedShortcuts.length
+                totalShortcuts: all.length
             });
         } catch (err) {
             console.error("Erreur lors du chargement des raccourcis :", err);
         }
     };
+const setupData = location.state?.setupData;
+const fromSetup = location.state?.fromSetup;
+useEffect(() => {
+  if (fromSetup && setupData) {
+    handleStart(setupData);
+  }
+}, [fromSetup, setupData]);
+
 
     // ========================================
     // 🔹 RENDU CONDITIONNEL
     // ========================================
     if (!hasStarted) {
-        return <QuizzSetup onStart={handleStart} />;
+        return <QuizzSetup 
+        preselectedSoftwareId={preselectedSoftwareId}
+        onStart={handleStart} />;
     }
 
-    if (isLoadingPref) return <p>Chargement...</p>;
+    //if (isLoadingPref) return <p>Chargement...</p>;
 
     return (
         <div className={styles.trainingPage}>
@@ -646,10 +670,11 @@ const Training: React.FC = () => {
                                     <Button onClick={finishTraining}>Terminer</Button>
                                 </div>
                             </div>
+                            {/* 
                             <div className={styles.history}>
                                 <h2>Historique :</h2>
                                 <ul>
-                                    {Object.entries(groupedHistory).reverse().map(([action, attempts]) => (
+                                    {Object.entries(grouped).reverse().map(([action, attempts]) => (
                                         <li key={action} className={styles.groupedItem}>
                                             <div className={styles.groupHeader}>
                                                 <strong>{action} - {attempts.length} tentative{attempts.length > 1 ? 's' : ''}</strong>
@@ -675,57 +700,33 @@ const Training: React.FC = () => {
                                     ))}
                                 </ul>
                             </div>
+                            */}
+                                                <HistoryList 
+                                                grouped={grouped} 
+                                                detailsOpen={detailsOpen} 
+                                                toggleDetails={toggleDetails} 
+                                                successCount={successCount}
+                                                failureCount={failureCount}
+                                                gameOver={gameOver}
+                                                currentIndex={currentIndex}
+                                                onRestart={restartTraining}
+                                                 />
+
                         </div>
                     </div>
                 </>
             ) : (
-                <div className={styles.endScreen}>  
-                    <h1 className={styles.quizzTitle}>Vos statistiques</h1>
-                    <p className={styles.infosTitle}>Suivez votre progrès et analysez votre performance</p>
-                    <div className={styles.scoreContainer}>
-                        <div className={styles.scoreCard}>
-                            <p>Score : {correctCount} bonnes réponses sur {currentIndex} questions</p>
-                            <LuTarget />
-                        </div>
-                        <div className={styles.scoreCard}>
-                            <p>Temps moyen de réponse : {history.length > 0 ? formatTime(Math.round(history.reduce((acc, cur) => acc + (cur.responseTime ?? 0), 0) / history.length)) : '0 s'}</p>
-                            <IoIosTimer />
-                        </div>
-                        <Button onClick={restartTraining}>Recommencer</Button>
-                    </div>
-                    <div className={styles.historyEndSection}>
-                        <div className={styles.history}>
-                            <h2>Historique :</h2>
-                            <ul>
-                                {Object.entries(groupedHistory).reverse().map(([action, attempts]) => (
-                                    <li key={action} className={styles.groupedItem}>
-                                        <div className={styles.groupHeader}>
-                                            <strong>{action} - {attempts.length} tentative{attempts.length > 1 ? 's' : ''}</strong>
-                                            <button
-                                                className={styles.toggleDetailsBtn}
-                                                onClick={() => toggleDetails(action)}
-                                            >
-                                                {detailsOpen[action] ? <FaArrowCircleUp /> : <FaArrowCircleDown />}
-                                            </button>
-                                        </div>
-                                        {detailsOpen[action] && (
-                                            <ul className={styles.detailList}>
-                                                {attempts.map((item, index) => (
-                                                    <li key={index}
-                                                        className={item.success ? styles.correct : styles.incorrect}>
-                                                        Ta réponse : <strong>{item.userInput}</strong> - 
-                                                        {item.success ? "Bonne réponse" : "Mauvaise réponse"}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <PieComp successCount={successCount} failureCount={failureCount} />
-                    </div>
-                </div>
+                <HistoryList 
+                                                grouped={grouped} 
+                                                detailsOpen={detailsOpen} 
+                                                toggleDetails={toggleDetails} 
+                                                successCount={successCount}
+                                                failureCount={failureCount}
+                                                gameOver={gameOver}
+                                                currentIndex={currentIndex}
+                                                
+                                                onRestart={restartTraining}
+                                                 />
             )}
         </div>
     );

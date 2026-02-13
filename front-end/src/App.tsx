@@ -13,13 +13,19 @@ import MyAccount from "./pages/MyAccount.tsx";
 import Auth from "./pages/Auth";
 import Footer from './components/footer/Footer';
 import Stats from "./pages/Stats";
+import { useState } from "react";
+
 //changement : suppression de l'imporpt LINK car inutilisé
 function App() {
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   return (
     <Router>
-      <Header />
+      <Header 
+      isVisible={sidebarVisible}
+      setIsVisible={setSidebarVisible}
+   />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home sidebarVisible={sidebarVisible} />} />
         <Route path="/encyclopedie" element={<Encyclopedie />} />
         <Route path="/encyclopedie/:softwareId" element={<Encyclopedie />} />
         <Route path="/quizz" element={<QuizzPage />} />

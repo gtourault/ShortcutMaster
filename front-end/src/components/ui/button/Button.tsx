@@ -8,11 +8,17 @@ interface ButtonProps {
     className?: string;
     style?: React.CSSProperties;
     disabled?: boolean;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, type = 'button', variant = 'primary' }) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, type = 'button', variant = 'primary', ...props }) => {
     return (
-        <button onClick={onClick} type={type} className={`${styles.button} ${styles[variant]}`}>
+        <button 
+        {...props}
+        onClick={onClick} 
+        type={type} 
+        className={`${styles.button} ${styles[variant]} ${props.className ?? ''}`}>
             {children}
         </button>
     );

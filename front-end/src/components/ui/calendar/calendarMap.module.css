@@ -1,0 +1,117 @@
+
+.calendarContainer {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: none;
+  padding: var(--spacing-md);
+  padding-top: 2rem;
+  position: relative;
+  border-right: solid 2px var(--border-primary);
+  font-family: var(--font-base);
+
+}
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 colonnes = 7 jours */
+  grid-auto-rows: 0.1fr;                  /* hauteur des cases = largeur */
+  gap: 12px;
+  width: fit-content;
+  padding: var(--spacing-md);
+  height: 420px;
+}
+
+.day {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background-color: #2d2d2d;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-small);
+  font-family: var(--font-base);
+}
+
+.empty {
+  width: 44px;
+  height: 44px;
+  background-color: var(--ic-primary);
+  border-radius: 8px;
+
+}
+.weekDay {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-base);
+  color: var(--color-muted);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.level0 { background-color: #2d2d2d; }
+.level1 { background-color: #9be9a8; }
+.level2 { background-color: #40c463; }
+.level3 { background-color: #30a14e; }
+.level4 { background-color: #216e39; }
+
+.calendarMonthSpan {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-base);
+  text-transform: uppercase;
+
+  border-radius: 8px;
+  padding: var(--spacing-sm);
+  background-color: var(--ic-primary);
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 140%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+
+.day:hover .tooltip {
+  opacity: 1;
+}
+
+.dayNumber {
+  line-height: 1;
+}
+
+.calendarHeader {
+  width: 100%;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendarHeader span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-base);
+  text-transform: uppercase;
+  width: fit-content;
+  height: 100%;
+  gap: 6px;
+}

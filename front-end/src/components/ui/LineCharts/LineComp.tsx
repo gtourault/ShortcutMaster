@@ -8,7 +8,8 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-import { Session } from '../../../types/sessions';
+import type { Session } from '../../../libs/types';
+
 
 // changement a faire : probleme type session declaré ici et danns statsuser
 

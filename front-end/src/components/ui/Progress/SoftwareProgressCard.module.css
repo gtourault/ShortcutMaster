@@ -1,0 +1,79 @@
+.card {
+  background: #121212;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  width: 350px;
+  height: fit-content;
+  padding: 2rem;
+  font-family: var(--font-base);
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(
+      ellipse at right top,
+      var(--border-primary) 0%,
+      var(--bg-primary) 47%,
+      var(--bg-primary) 100%
+);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.softwareInfo {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.softwareContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.level {
+  font-size: var(--font-size-p);
+}
+
+.globalValue {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.details {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.beginner {
+  border: 1px solid #3a3a3a;
+}
+
+.intermediate {
+  border: 1px solid #4fa3ff;
+  box-shadow: 0 0 8px rgba(79, 163, 255, 0.2);
+}
+
+.advanced {
+  border: 1px solid #4caf50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.expert {
+  border: 1px solid #fbc02d;
+  box-shadow: 0 0 14px rgba(251, 192, 45, 0.4);
+}

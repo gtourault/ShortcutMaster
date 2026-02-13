@@ -1,10 +1,12 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import styles from './Pie.module.css';
 const COLORS = ['var(--color-success)', 'var(--color-error)']; // Couleurs pour réussite et échec
 
 interface Props {
   successCount: number;
   failureCount: number;
+  labels?: [string, string];
+
 }
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -18,30 +20,55 @@ const CustomTooltip = ({ active, payload }: any) => {
   }
   return null;
 };
-export default function SessionSuccessPie({ successCount, failureCount }: Props) {
+
+const CustomLegend = ({ payload }: any) => (
+  console.log(payload),
+  <div className={styles.legend}>
+    {payload.map((entry: any, index: number) => (
+      <div key={index} className={styles.legendItem}
+      style={{ backgroundColor: entry.color }}>
+        <span
+          className={styles.legendDot}
+        />
+        <span>{entry.value}</span>
+      </div>
+    ))}
+  </div>
+)
+  
+
+
+export default function SessionSuccessPie({
+  successCount,
+  failureCount,
+  labels,
+
+}: Props) {
+  const [successLabel, failureLabel] = labels || ['Réussites', 'Échecs'];
   const data = [
-    { name: 'Réussites', value: successCount },
-    { name: 'Échecs', value: failureCount }
+    { name: successLabel, value: successCount },
+    { name: failureLabel, value: failureCount }
   ];
 
   return (
-    <PieChart width={300} height={300}>
-      <Pie
-        data={data}
-        cx="50%"
-        cy="50%"
-        innerRadius={70}
-        outerRadius={120}
-        fill="#8884d8"
-        dataKey="value"
-        
-      >
-        {data.map((_, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-      </Pie>
-      <Tooltip content={CustomTooltip} />
-      <Legend />
-    </PieChart>
+    <div className={styles.PieCharts}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            outerRadius="80%"
+            dataKey="value"
+          >
+            {data.map((_, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip content={CustomTooltip} />
+          <Legend content={<CustomLegend />} />
+        </PieChart>
+      </ResponsiveContainer>
+</div>
   );
 }

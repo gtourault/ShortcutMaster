@@ -1,0 +1,80 @@
+.container {
+  padding: 16px;
+  width: 320px;
+  height: 400px;
+  border-left: none;
+  padding-top: 2rem;
+  padding-bottom: var(--spacing-xl);
+  padding-right: var(--spacing-xl);
+  padding-left: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-base);
+}
+.container h3 {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 8px;
+  width: 100%;
+}
+.section {
+  width: 100%;
+  margin-top: 12px;
+}
+.date {
+  background-color: var(--ic-primary);
+  padding: 8px;
+  border-radius: 8px;
+}
+.section h4 {
+  margin-bottom: 6px;
+}
+.section p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.quizzSection {
+  background-color: var(--ic-secondary);
+  padding: 8px;
+  border-radius: 8px;
+}
+.trainingSection {
+  background-color: var(--ic-secondary);
+  padding: 8px;
+  border-radius: 8px;
+}
+.button {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.sessionsList {
+  position: absolute;
+}
+.detailsBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.scoreGreen { 
+    background-color: #40c463;
+}
+.scoreOrange { background-color: #ff8c42; }
+.scoreRed { background-color: #f85149; }
+.scoreGray { background-color: #999; }
+.score {
+    padding: 8px;
+    border-radius: 18px;
+    width: fit-content;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+}

@@ -1,12 +1,14 @@
 .home {
     text-align: center;
-    padding: 2rem 0;
+    padding-top: 2rem;
     background-color: var(--bg-secondary);
     color: var(--text-primary);
     display: flex;
+    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
 }
 
 .home h1 {
@@ -17,15 +19,40 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.heroSection {
+    z-index: 0;
 
+}
+.heroSection h1{
+    z-index: 21 ;
+
+}
 .heroSection p {
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
     color: var(--text-secondary);
     width: 60%;
-
+    z-index: 21;
 }
-
+.heroSection::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: 
+    linear-gradient(to top, 
+    var(--bg-secondary) 0%, rgba(0, 0, 0, 0) 40%), 
+    linear-gradient(to bottom, var(--bg-secondary) 0%,
+     rgba(0, 0, 0, 0) 40%), linear-gradient(to left, 
+     var(--bg-secondary) 0%, rgba(0, 0, 0, 0) 40%),
+      linear-gradient(to right, var(--bg-secondary) 0%,
+       rgba(0, 0, 0, 0) 40%), url(D:\OneDrive\Bureau\ShortCutMaster\front-end\public\assets\coding_view_resize.webp);
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    transform: scale(1);
+    z-index: 20;
+    
+}
 .heroSection {
     display: flex;
     justify-content: center;
@@ -40,21 +67,7 @@
   flex-wrap: wrap;
   gap: 2rem;
   margin-top: 3rem;
-}
-
-.card {
-  flex: 1 1 250px;
-  border: 1px solid var(--text-secondary);
-  border-radius: 12px;
-  padding: var(--spacing-xs) var(--spacing-xl);
-  text-align: center;
-  background-color: #fff0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  z-index: 1;
 }
 
 .card:hover {
@@ -63,7 +76,6 @@
 
 .icon {
   font-size: 2rem;
-  margin-bottom: 1rem;
 }
 
 .value {
@@ -88,36 +100,95 @@
   margin-bottom: 2rem;
   color: var(--text-primary);
 }
-
-.cardsWrapper {
-  display: flex;
-  justify-content: space-around;
-  gap: 2rem;
+.parent {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+grid-template-rows: repeat(3, 1fr);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
 }
 
-.difficultyCard {
+.div1 {
+  grid-area: 1 / 1 / 2 / 4;
+}
+
+.div2 {
+  grid-area: 2 / 1 / 3 / 4;
+}
+
+.div3 {
+  grid-area: 3 / 1 / 4 / 4;
+}
+
+.div4 {
+  grid-area: 1 / 4 / 4 / 6;
+}
+
+
+
+.cardsWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  gap: 2rem;
+  padding: var(--spacing-xl);
+}
+.ctaCard {
   flex: 1 1 300px;
-  border: 1px solid var(--text-secondary);
   border-radius: 12px;
   padding: 2rem;
   text-align: left;
-  background-color: #fff0;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
 }
+.difficultyCard {
+  /*flex: 1 1 300px;*/
+  border-radius: 12px;
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  display: flex;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  flex-direction: row;
+  overflow: hidden;
+  width: 1000px;
+}
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  width: 35%;
+  background-color: var(--solid-secondary);
+  padding: 2rem;
 
+}
 .difficultyCard:hover {
   transform: translateY(-5px);
 }
+.cardButtonContainer {
+  width: 30%;
+  padding: 2rem;
+  background-color: var(--solid-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  flex-direction: column;
 
+}
 .cardHeader {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  width: 35%;
+  flex-direction: column;
+  padding: 2rem;
+  justify-content: space-around;
+
 }
 
 .icon {
@@ -133,7 +204,7 @@
 .featuresList {
   list-style-type: disc;
   padding-left: 1.5rem;
-  margin-bottom: 1.5rem;
+  /*margin-bottom: 1.5rem;*/
   color: var(--text-secondary);
 }
 
@@ -163,42 +234,323 @@
   margin-bottom: 2.5rem;
 }
 
+
+.sectionJolie {
+  height: 40vh;
+  width: 100%;
+  background-color: var(--bg-primary);
+}
+
 .softwareCards {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
 }
-
 .softwareCard {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid var(--text-secondary);
-  padding: 1.5rem 2rem;
+  font-family: var(--font-base);  
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   border-radius: 10px;
-  min-width: 280px;
-  max-width: 350px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  background-color: #fff0;
-  transition: transform 0.2s ease;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 25vw;
+  gap: var(--spacing-sm);
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  /*
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;
+  box-shadow: rgba(62, 99, 221, 0.3) 0px 30px 60px -12px inset, rgba(84, 114, 228, 0.25) 0px 18px 36px -18px inset;
+  */
 }
+.softwareCard::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 35%;
+  height: 45%;
+  background: rgba(84, 114, 228, 0.3);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 3;
+}
+.softwareCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 55%;
+  background: rgba(158, 177, 255, 0.2);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 2;
+}
+/*
 
+*/
 .softwareCard:hover {
   transform: translateY(-4px);
 }
 
-.softwareIcon {
-  font-size: 2rem;
+
+.containerLogoFavorite {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.containerInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+.logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
-.softwareInfo h3 {
+.favorite {
+  font-size: 1.2rem;
+  color: var(--ic-tertiary);
+}
+
+/* Titre logiciel */
+h3 {
+  margin: 0.3rem 0;
   font-size: 1.1rem;
-  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+/* Catégorie et info raccourcis */
+.info {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+/* Bouton en bas */
+.softwareCard button {
+  align-self: center;
+  margin-top: auto;
+}
+
+.categorie {
+  font-size: 0.9rem;
+  background-color: var(--solid-secondary);
+  color: var(--text-secondary);
+  padding-top: var(--spacing-xs);
+  padding-bottom: var(--spacing-xs);
+  padding-right: var(--spacing-sm);
+  padding-left: var(--spacing-sm);
+  border: 1px solid var(--border-secondary);
+  border-radius: 20px;
+}
+
+.card {
+  flex: 1 1 250px;
+  border-radius: 12px;
+  font-family: var(--font-base);
+  padding: var(--spacing-xs) var(--spacing-xl);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  height: 350px;
+  width: 300px;
+}
+
+.logoScroller img {
+    width: 40px;
+    height: 40px;
+    margin-top: var(--spacing-sm);
+    
+}
+.logoScroller {
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 20px;
+  animation: scrollLogos 10s linear infinite;
+  padding: var(--spacing-xs);
+}
+
+.logoScrollerDeux img {
+    width: 40px;
+    height: 40px;
+    margin-top: var(--spacing-sm);
+}
+.logoScrollerDeux {
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 20px;
+  animation: scrollLogos 10s linear infinite reverse;
+  padding: var(--spacing-xs);
+}
+.cardSoftwares {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cardSoftwares .description {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+@keyframes scrollLogos {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+  0% { transform: translateX(0); }
+}
+
+.cardUsers {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  
+}
+.cardUsers  p {
+  font-family: var(--font-base);
   color: var(--text-primary);
 }
+.containerLineChart {
+  padding-right: var(--spacing-md);
+  width: 100%;
+  height: 180px;
+}
+.cardLogin {
+    width: 300px;
+    height: 350px;
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    z-index: 2;
+}
 
-.softwareInfo p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
+.crowd {
+    position: relative;
+    width: 100%;
+    min-height: 160px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: visible;
+    margin-left: 6%;
+    margin-top: 2%;
+}
+.pageTest svg {
+    width: 120px;
+    height: 120px;
+}
+
+.avatar {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    transition: 
+    transform 0.3s ease,
+    filter 0.3s ease-in-out;
+}
+
+.avatar:nth-child(1) {
+    top: 30%;
+    left: 25%;
+    z-index: 10;
+  
+
+}
+.avatar:nth-child(2) {
+    top: 20%;
+    left: 13%;
+    z-index: 9;
+  
+
+}
+.avatar:nth-child(3) {
+    top: 20%;
+    left: 38%;
+    z-index: 9;
+  
+
+}
+.avatar:nth-child(4) {
+    top: 10%;
+    left: 0%;
+    z-index: 8;
+  
+
+}
+.avatar:nth-child(5) {
+    top: 10%;
+    left: 50%;
+    z-index: 8;
+  
+
+}
+.avatar:nth-child(6) {
+    top: 0%;
+    left: 13%;
+    z-index: 7;
+    
+  
+
+}
+.avatar:nth-child(7) {
+    top: 0%;
+    left: 38%;
+    z-index: 7;
+  
+
+
+}
+.avatar:nth-child(8) {
+    top: 20%;
+    left: 25%;
+    z-index: 7;
+  
+
+}
+.avatar:nth-child(9) {
+    top: 20%;
+    left: 20%;
+    display: none;
+    z-index: 10;
+  
+}
+
+.avatar.activeAvatar {
+  transition: transform 1s ease-in;
+
+  transform: translateY(-50px);
+}
+.cardLogin:hover .avatar {
+    filter: drop-shadow(0 0 8px rgba(62, 99, 221, 0.6))
+          drop-shadow(0 0 12px rgba(84, 114, 228, 0.4));
 }

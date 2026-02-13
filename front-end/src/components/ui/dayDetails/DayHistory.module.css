@@ -1,0 +1,144 @@
+/* Container global de l'historique */
+.historyContainer {
+  padding: 16px;
+  width: 100%;
+  text-transform: uppercase;
+  font-family: var(--font-base);
+}
+.historyContainer::before {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: var(--ic-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Titre */
+.historyContainer h4 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Ligne session */
+.sessionRow {
+  border-bottom: 1px solid var(--ic-primary);
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sessionRow:first-of-type {
+  border-top: 100px solid var(--ic-primary);
+}
+.sessionRow:last-child {
+  border-bottom: none;
+}
+
+/* Résumé de session (avant détails) */
+.sessionSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Infos session */
+.sessionInfoLabels,
+.sessionInfo {
+  display: grid;
+  grid-template-columns:
+  1fr
+  1.5fr
+  0.8fr
+  0.8fr
+  1.2fr
+  0.8fr
+  1.3fr;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.85rem;
+  padding: 8px;
+}
+.sessionInfoLabels {
+  border-bottom: 1px solid var(--ic-primary);
+}
+.historyButton {
+  border-bottom: 1px solid var(--ic-primary);
+
+}
+/* Bouton détails */
+.detailsButton {
+
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
+}
+
+.detailsButton:hover {
+  background-color: var(--ic-primary);
+}
+
+/* Détails de la session (tableau) */
+
+
+.sessionInfoLabels p {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 12px;
+    margin-left: 4px;
+}
+
+.software {
+    background-color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 8px;
+}
+.score {
+    padding: 4px;
+    border-radius: 8px;
+    width: fit-content;
+    margin-left: 8px;
+}
+.scoreGreen { 
+    background-color: #40c463;
+}
+.scoreOrange { background-color: #ff8c42; }
+.scoreRed { background-color: #f85149; }
+.scoreGray { background-color: #999; }
+
+
+
+.sessionDetails {
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.detailsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.detailsTable th,
+.detailsTable td {
+  padding: 6px 8px;
+  text-align: left;
+}
+.detailsTable th {
+    padding-bottom: 10px;
+    width: fit-content;
+}
+
+/* Lignes correctes / incorrectes */
+.correctRow {
+  color: var(--color-success); /* vert clair */
+}
+
+.incorrectRow {
+  color: var(--color-error); /* rouge clair */
+}

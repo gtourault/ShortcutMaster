@@ -73,8 +73,8 @@
     Icônes
     Arrière-plans simples sans effet d'interaction
     Cartes ou autres sections de contenu statiques*/
-    --solid-primary: #3E63DD;
-    --solid-secondary: #5472E4;
+    --solid-primary: rgb(62, 99, 221);
+    --solid-secondary: rgb(84, 114, 228);
 
 
     /* Accessible text 
@@ -82,9 +82,10 @@
     Légendes
     Labels de formulaires
     Texte dans les menus, boutons, etc.*/
-    --text-primary: #9EB1FF;
-    --text-secondary: #D6E1FF;
-
+    --text-primary: rgb(158, 177, 255);
+    --text-secondary: rgb(214, 225, 255);
+    
+    --sidebar-w: 250px;
     /*  */
     /*  */
     /*  */
